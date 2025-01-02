@@ -1,0 +1,39 @@
+"use client";
+
+import { Spinner } from "@/components/spinner";
+import { useAuth } from "@/components/providers/auth-provider";
+import { redirect } from "next/navigation";
+
+import Navigation from "./_components/navigation";
+//import { SearchCommand } from "@/components/search-command";
+
+export default function MainLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  {
+    /** add user info */
+  }
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
+  if (isAuthenticated) {
+    return redirect("/documents");
+  }
+  return (
+    <div className="h-full flex dark:bg-[#1f1f1f]">
+      <Navigation />
+      {/** 
+      <SearchCommand />
+      */}
+      <main className="flex-1 h-full overflow-y-auto">{children}</main>
+    </div>
+  );
+}
