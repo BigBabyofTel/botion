@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import Image from "next/image";
+import Image from 'next/image';
 
-import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
-import { useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { Button } from '@/components/ui/button';
+import { PlusCircle } from 'lucide-react';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import { create } from '@/app/actions';
+import { useAuth } from '@/components/providers/auth-provider';
 
 export default function DocumentsPage() {
   const router = useRouter();
-  const create = useMutation(api.documents.create);
+  const { AccessToken } = useAuth();
 
   const onCreate = () => {
-    const promise = create({ title: "untitled" }).then((documentId) =>
-      router.push(`/documents/${documentId}`)
+    const promise = create({ title: 'untitled', AccessToken }).then(
+      (documentId) => router.push(`/documents/${documentId.documentId}`)
     );
 
     toast.promise(promise, {
-      loading: "Creatign a new note...",
-      success: "New note created!",
-      error: "Failed to create a new note.",
+      loading: 'Creating a new note...',
+      success: 'New note created!',
+      error: 'Failed to create a new note.',
     });
   };
 
@@ -41,9 +41,7 @@ export default function DocumentsPage() {
         alt="empty"
         className="hidden dark:block"
       />
-      <h2 className="text-lg font-medium">
-        Welcome to {}&apos;s Botion
-      </h2>
+      <h2 className="text-lg font-medium">Welcome to {}&apos;s Botion</h2>
       <Button onClick={onCreate}>
         <PlusCircle className="h-4 w-4 mr-2 " />
         Create a note

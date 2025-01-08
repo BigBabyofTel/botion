@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
 //needs auth added, sign in and sign out features
-import { useScrollTop } from "@/hooks/use-scroll-top";
-import { cn } from "@/lib/utils";
-import { Logo } from "./logo";
-import { ModeToggle } from "@/components/mode-toggle";
-import { Button } from "@/components/ui/button";
+import { useScrollTop } from '@/hooks/use-scroll-top';
+import { cn } from '@/lib/utils';
+import { Logo } from './logo';
+import { ModeToggle } from '@/components/mode-toggle';
+import { Button } from '@/components/ui/button';
 //import { Spinner } from "@/components/spinner";
-import Link from "next/link";
-import { useAuth } from "@/components/providers/auth-provider";
-import { redirect } from "next/navigation";
+import Link from 'next/link';
+import { useAuth } from '@/components/providers/auth-provider';
+import { redirect } from 'next/navigation';
 
 export const Navbar = () => {
   const { isAuthenticated } = useAuth();
@@ -18,11 +18,11 @@ export const Navbar = () => {
   return (
     <div
       className={cn(
-        "z-50 bg-background dark:bg-[#1f1f1f] fixed top-0 flex items-center w-full p-6",
-        scrolled && "border-b shadow-sm"
+        'z-50 bg-background dark:bg-[#1f1f1f] fixed top-0 flex items-center w-full p-6',
+        scrolled && 'border-b shadow-sm'
       )}
     >
-      <div onClick={() => redirect("/")}>
+      <div onClick={() => redirect('/')}>
         <Logo />
       </div>
       <div className="md:ml-auto md:justify-end justify-between w-full flex items-center gap-x-2">
@@ -33,12 +33,12 @@ export const Navbar = () => {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => redirect("/auth/login")}
+              onClick={() => redirect('/auth/login')}
             >
               Log in
             </Button>
 
-            <Button size="sm" onClick={() => redirect("/auth/signup")}>
+            <Button size="sm" onClick={() => redirect('/auth/signup')}>
               Get Botion free
             </Button>
           </>

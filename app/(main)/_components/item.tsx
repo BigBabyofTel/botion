@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   DropdownMenu,
@@ -6,12 +6,9 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Skeleton } from "@/components/ui/skeleton";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
-import { cn } from "@/lib/utils";
-import { useMutation } from "convex/react";
+} from '@/components/ui/dropdown-menu';
+import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
 import {
   ChevronDown,
   ChevronRight,
@@ -19,12 +16,13 @@ import {
   MoreHorizontal,
   Plus,
   Trash,
-} from "lucide-react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+} from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import React from 'react';
 
 interface ItemsProps {
-  id?: Id<"documents">;
+  id?: Id<'documents'>;
   documentIcon?: string;
   active?: boolean;
   expanded?: boolean;
@@ -48,21 +46,18 @@ export default function Item({
   onExpand,
   expanded,
 }: ItemsProps) {
-  
   const router = useRouter();
-  const create = useMutation(api.documents.create);
-  const archive = useMutation(api.documents.archive);
 
   const onArchive = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
     if (!id) return;
     const promise = archive({ id }).then(() => {
-      router.push("/documents");
+      router.push('/documents');
     });
     toast.promise(promise, {
-      loading: "Archiving...",
-      success: "Document moved to Trash!",
-      error: "Failed to archive document",
+      loading: 'Archiving...',
+      success: 'Document moved to Trash!',
+      error: 'Failed to archive document',
     });
   };
 
@@ -76,7 +71,7 @@ export default function Item({
   const onCreate = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
     if (!id) return;
-    const promise = create({ title: "Untitled", parentDocument: id }).then(
+    const promise = create({ title: 'Untitled', parentDocument: id }).then(
       (documentId) => {
         if (!expanded) {
           onExpand?.();
@@ -86,9 +81,9 @@ export default function Item({
     );
 
     toast.promise(promise, {
-      loading: "Creating document...",
-      success: "Document created successfully!",
-      error: "Failed to create document",
+      loading: 'Creating document...',
+      success: 'Document created successfully!',
+      error: 'Failed to create document',
     });
   };
 
@@ -98,10 +93,10 @@ export default function Item({
     <div
       onClick={onClick}
       role="button"
-      style={{ paddingLeft: level ? `${level * 12 + 12}px` : "12px" }}
+      style={{ paddingLeft: level ? `${level * 12 + 12}px` : '12px' }}
       className={cn(
-        "group min-h-[27px] text-sm py-1 pr-3 w-full hover:bg-primary/5 flex items-center text-muted-foreground font-medium",
-        active && "bg-primary/5 text-primary"
+        'group min-h-[27px] text-sm py-1 pr-3 w-full hover:bg-primary/5 flex items-center text-muted-foreground font-medium',
+        active && 'bg-primary/5 text-primary'
       )}
     >
       {!!id && (
@@ -150,7 +145,7 @@ export default function Item({
 
               <div className="text-xs text-muted-foreground p-2">
                 {/** add the user */}
-                Last edited by: 
+                Last edited by:
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -171,7 +166,7 @@ Item.Skeleton = function ItemSkeleton({ level }: { level?: number }) {
   return (
     <div
       style={{
-        paddingLeft: level ? `${level * 12 + 25}px` : "12px",
+        paddingLeft: level ? `${level * 12 + 25}px` : '12px',
       }}
       className="flex gap-x-2 py-[3px]"
     >

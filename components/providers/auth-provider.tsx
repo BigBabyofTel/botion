@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { AuthContextType } from "@/lib/types";
-import React, { createContext, useState, useContext } from "react";
+import { AuthContextType } from '@/lib/types';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -11,7 +11,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const sessions = {
+  const sessions: AuthContextType = {
     AccessToken,
     RefreshToken,
     isAuthenticated,
@@ -19,20 +19,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setAccessToken,
     setRefreshToken,
     setIsAuthenticated,
-    setIsLoading
+    setIsLoading,
   };
 
+  useEffect(() => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const codeParam = urlParams.get('code');
+    if (codeParam) {
+      setAccessToken(codeParam);
+      setIsAuthenticated(true);
+      setIsLoading(false);
+    }
+    console.log(AccessToken);
+  }, [AccessToken]);
+
   return (
-    <AuthContext.Provider value={sessions}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={sessions}>{children}</AuthContext.Provider>
   );
 }
 
 export function useAuth() {
-    const context = useContext(AuthContext);
-    if (context === undefined) {
-      throw new Error("useAuth must be used within an AuthProvider");
-    }
-    return context;
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
   }
+  return context;
+}

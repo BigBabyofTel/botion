@@ -1,18 +1,16 @@
-"use client";
+'use client';
 
-import { api } from "@/convex/_generated/api";
-import { Id, Doc } from "@/convex/_generated/dataModel";
-import { useQuery } from "convex/react";
-import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
-import Item from "./item";
-import { cn } from "@/lib/utils";
-import { FileIcon } from "lucide-react";
+import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import Item from './item';
+import { cn } from '@/lib/utils';
+import { FileIcon } from 'lucide-react';
+import { useAuth } from '@/components/providers/auth-provider';
 
 interface DocumentListProps {
-  parentDocumentId?: Id<"documents">;
+  parentDocumentId?: Id<'documents'>;
   level?: number;
-  data?: Doc<"documents">[];
+  data?: Doc<'documents'>[];
 }
 
 export default function DocumentList({
@@ -21,6 +19,7 @@ export default function DocumentList({
 }: DocumentListProps) {
   const params = useParams();
   const router = useRouter();
+  const { isAuthenticated } = useAuth();
 
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
@@ -31,15 +30,11 @@ export default function DocumentList({
     }));
   };
 
-  const documents = useQuery(api.documents.getSidebar, {
-    parentDocument: parentDocumentId,
-  });
-
   const onRedirect = (documentId: string) => {
     router.push(`/documents/${documentId}`);
   };
 
-  if (documents === undefined) {
+  if (isAuthenticated) {
     return (
       <>
         <Item.Skeleton level={level} />
@@ -60,16 +55,18 @@ export default function DocumentList({
           paddingLeft: level ? `${level * 12 + 25}px` : undefined,
         }}
         className={cn(
-          "hidden text-sm font-medium text-muted-foreground/80",
-          expanded && "last:block",
-          level === 0 && "hidden"
+          'hidden text-sm font-medium text-muted-foreground/80',
+          expanded && 'last:block',
+          level === 0 && 'hidden'
         )}
       >
         No pages inside
       </p>
+
+      {/*
       {documents.map((document) => (
         <div key={document._id}>
-            <Item
+          <Item
             id={document._id}
             onClick={() => onRedirect(document._id)}
             label={document.title}
@@ -79,15 +76,12 @@ export default function DocumentList({
             level={level}
             onExpand={() => onExpand(document._id)}
             expanded={expanded[document._id]}
-            />
-            {expanded[document._id] && (
-                <DocumentList
-                parentDocumentId={document._id}
-                level={level + 1}
-                />
-            )}
+          />
+          {expanded[document._id] && (
+            <DocumentList parentDocumentId={document._id} level={level + 1} />
+          )}
         </div>
-      ))}
+      ))}*/}
     </>
   );
 }

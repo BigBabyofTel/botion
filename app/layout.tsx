@@ -1,25 +1,26 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import { ThemeProvider } from "@/components/providers/theme-provider";
-import { EdgeStoreProvider } from "@/lib/edgestore";
-import { Toaster } from "sonner";
-import { ModalProvider } from "@/components/providers/modal-provider";
-import { AuthProvider } from "@/components/providers/auth-provider";
+import type { Metadata } from 'next';
+import './globals.css';
+import { ThemeProvider } from '@/components/providers/theme-provider';
+import { EdgeStoreProvider } from '@/lib/edgestore';
+import { Toaster } from 'sonner';
+import { ModalProvider } from '@/components/providers/modal-provider';
+import { AuthProvider } from '@/components/providers/auth-provider';
+import React from 'react';
 
 export const metadata: Metadata = {
-  title: "Botion",
-  description: "A cocoon where work will expediently happen",
+  title: 'Botion',
+  description: 'A cocoon where work will expediently happen',
   icons: {
     icon: [
       {
-        media: "(prefers-color-scheme: light)",
-        url: "/botion-logo-light.svg",
-        href: "/botion-logo-light.svg",
+        media: '(prefers-color-scheme: light)',
+        url: '/botion-logo-light.svg',
+        href: '/botion-logo-light.svg',
       },
       {
-        media: "(prefers-color-scheme: dark)",
-        url: "/botion-logo-dark.svg",
-        href: "/botion-logo-dark.svg",
+        media: '(prefers-color-scheme: dark)',
+        url: '/botion-logo-dark.svg',
+        href: '/botion-logo-dark.svg',
       },
     ],
   },

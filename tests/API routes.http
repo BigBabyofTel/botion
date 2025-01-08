@@ -1,0 +1,14 @@
+### POST route for login
+###
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "Tim",
+  "password": "Timmothy1!"
+}
+
+### POST route for signup
+###
+POST http://localhost:3000/api/auth/signup
+Content-Type: application/json

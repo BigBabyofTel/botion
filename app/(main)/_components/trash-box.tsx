@@ -1,14 +1,11 @@
-"use client";
+'use client';
 
-import { Spinner } from "@/components/spinner";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
-import { useMutation, useQuery } from "convex/react";
-import { Search, Trash, Undo } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
-import React, { useState } from "react";
-import { toast } from "sonner";
-import { ConfirmModal } from "@/components/modals/confirm-modal";
+import { Spinner } from '@/components/spinner';
+import { Search, Trash, Undo } from 'lucide-react';
+import { useParams, useRouter } from 'next/navigation';
+import React, { useState } from 'react';
+import { toast } from 'sonner';
+import { ConfirmModal } from '@/components/modals/confirm-modal';
 
 export default function TrashBox() {
   const router = useRouter();
@@ -17,7 +14,7 @@ export default function TrashBox() {
   const restore = useMutation(api.documents.restore);
   const remove = useMutation(api.documents.remove);
 
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
 
   const filteredDocuments = documents?.filter((document) => {
     return document.title.toLowerCase().includes(search.toLowerCase());
@@ -29,36 +26,34 @@ export default function TrashBox() {
 
   const onRestore = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    documentId: Id<"documents">
+    documentId: Id<'documents'>
   ) => {
     event.stopPropagation();
     const promise = restore({ id: documentId });
 
     toast.promise(promise, {
-      loading: "Restoring document...",
-      success: "Document restored!",
-      error: "Failed to restore document",
+      loading: 'Restoring document...',
+      success: 'Document restored!',
+      error: 'Failed to restore document',
     });
   };
 
-  const onRemove = (documentId: Id<"documents">) => {
+  const onRemove = (documentId: Id<'documents'>) => {
     const promise = remove({ id: documentId });
 
     toast.promise(promise, {
-      loading: "Deleting document...",
-      success: "Document Deleted!",
-      error: "Failed to delete document",
+      loading: 'Deleting document...',
+      success: 'Document Deleted!',
+      error: 'Failed to delete document',
     });
 
-   
-      router.push("/documents");
-    
+    router.push('/documents');
   };
 
   if (documents === undefined) {
     return (
       <div className="h-full flex items-center justify-center p-4">
-        <Spinner size={"lg"} />
+        <Spinner size={'lg'} />
       </div>
     );
   }

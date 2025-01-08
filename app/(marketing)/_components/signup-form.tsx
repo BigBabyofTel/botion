@@ -1,19 +1,18 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-
-import React, { useState } from "react";
-import { Logo } from "./logo";
-import { SignupFormSchema } from "@/lib/schema";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { z } from 'zod';
+import { redirect } from 'next/navigation';
+import React, { useState } from 'react';
+import { Logo } from './logo';
+import { SignupFormSchema } from '@/lib/schema';
 
 interface FormState {
   username: string;
   password: string;
   confirmPassword: string;
 }
-import { z } from "zod";
-import { redirect } from "next/navigation";
 
 export function SignupForm() {
   const [errors, setErrors] = useState<string[]>([]);
@@ -22,29 +21,32 @@ export function SignupForm() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const formState: FormState = {
-      username: formData.get("username") as string,
-      password: formData.get("password") as string,
-      confirmPassword: formData.get("confirm-password") as string,
+      username: formData.get('username') as string,
+      password: formData.get('password') as string,
+      confirmPassword: formData.get('confirm-password') as string,
     };
 
     try {
       SignupFormSchema.parse(formState);
       setErrors([]);
-      const response = await fetch("/api/auth", {
-        method: "POST",
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(formState),
       });
-      if (response.ok) console.log("Form submitted successfully");
-      if (!response.ok) throw new Error("Failed to submit form");
+      if (response.ok) {
+        console.log('Form submitted successfully');
+      } else {
+        setErrors(['Failed to submit form']);
+      }
     } catch (err) {
       if (err instanceof z.ZodError) {
         setErrors(err.errors.map((error) => error.message));
       }
     }
-    redirect("/auth/login");
+    redirect('/auth/login');
   }
 
   return (

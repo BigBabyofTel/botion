@@ -1,21 +1,17 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { api } from "@/convex/_generated/api";
-import { Doc } from "@/convex/_generated/dataModel";
-import { useMutation } from "convex/react";
-import { useRef, useState } from "react";
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useRef, useState } from 'react';
 
 interface TitleProps {
-  initialData: Doc<"documents">;
+  initialData: Doc<'documents'>;
 }
 
 const Title = ({ initialData }: TitleProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const update = useMutation(api.documents.update);
 
-  const [title, setTitle] = useState(initialData?.title || "untitled");
+  const [title, setTitle] = useState(initialData?.title || 'untitled');
   const [isEditing, setIsEditing] = useState(false);
 
   const enableInput = () => {
@@ -33,12 +29,12 @@ const Title = ({ initialData }: TitleProps) => {
     setTitle(event.target.value);
     update({
       id: initialData._id,
-      title: event.target.value || "Untitled",
+      title: event.target.value || 'Untitled',
     });
   };
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       disableInput();
     }
   };

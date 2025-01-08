@@ -1,44 +1,36 @@
-"use client";
+'use client';
 
-import { Spinner } from "@/components/spinner";
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
-import { useAuth } from "@/components/providers/auth-provider";
+import { Spinner } from '@/components/spinner';
+import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
+import { useAuth } from '@/components/providers/auth-provider';
 
 export const Heading = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
 
-  console.log(isAuthenticated);
   return (
     <div className="max-w-3xl space-y-4">
       <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold">
-        Your Work, Thoughts, & Plans. Coalesced. Welcome to{" "}
+        Your Work, Thoughts, & Plans. Coalesced. Welcome to{' '}
         <span className="underline">Botion</span>
       </h1>
       <h3 className="text-base sm:text-xl md:text-2xl font-medium">
         Botion is a connected workspace where great, gratuitous work happens.
       </h3>
-      {isAuthenticated && (
+      {isLoading && (
         <div className="w-full flex items-center justify-center">
           <Spinner size="lg" />
         </div>
       )}
-
-      {isAuthenticated ? (
+      {isAuthenticated && !isLoading && (
         <Button asChild>
           <Link href="/documents">
             Enter Botion
             <ArrowRight className="h-4 w-4 ml-2" />
           </Link>
         </Button>
-      ): (
-        <Button>
-        Get Botion free
-        <ArrowRight className="h-4 w-4 ml-2" />
-      </Button>
       )}
-    
     </div>
   );
 };
