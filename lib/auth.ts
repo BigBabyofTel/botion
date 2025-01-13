@@ -1,4 +1,4 @@
-import { User } from '@/lib/types';
+import { Tokens, User } from '@/lib/types';
 import { insertUserSchema, usersTable } from '@/app/api/db/schema';
 import { db } from '@/app/api/db/db';
 import { eq } from 'drizzle-orm';
@@ -25,13 +25,10 @@ export async function createUserData({ username, password }: User) {
   await db.insert(usersTable).values(storedData);
 }
 
-export async function verifyUser({ username, password }: User): Promise<
-  | {
-      accessToken: string;
-      refreshToken: string;
-    }
-  | undefined
-> {
+export async function verifyUser({
+  username,
+  password,
+}: User): Promise<Tokens | undefined> {
   const results = await db
     .select()
     .from(usersTable)

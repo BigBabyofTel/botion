@@ -3,12 +3,14 @@
 import { db } from '@/app/api/db/db';
 import { documentTable } from '@/app/api/db/schema';
 import { verifyToken } from '@/utils/jwt';
+import { GithubAccessToken, UserObject } from '@/lib/types';
 
 export interface CreateTypes {
   title: string;
   AccessToken: string | null;
 }
 
+//redo this create fn
 export async function create({ title, AccessToken }: CreateTypes) {
   if (AccessToken === null) {
     throw new Error('Token is not valid');
@@ -32,4 +34,41 @@ export async function setUpSession(token: string, refToken: string) {
   } else {
     throw new Error('Token is not verified');
   }
+}
+
+export async function getGithubAccessToken(
+  code: string
+): Promise<GithubAccessToken> {
+  const url = new URL('https://github.com/login/oauth/access_token');
+  url.searchParams.append(
+    'client_id',
+    process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID as string
+  );
+  url.searchParams.append(
+    'client_secret',
+    process.env.GITHUB_CLIENT_SECRET as string
+  );
+  url.searchParams.append('code', code);
+  const response = await fetch(url.toString(), {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+    },
+  });
+  if (!response.ok)
+    throw new Error(`Error fetching access token: ${response.statusText}`);
+  return response.json();
+}
+
+export async function getGitHubUser(accessToken: string): Promise<UserObject> {
+  const response = await fetch('https://api.github.com/user', {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  if (!response.ok)
+    throw new Error(`Error fetching user data: ${response.statusText}`);
+  return response.json();
 }

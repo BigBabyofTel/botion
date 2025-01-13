@@ -1,13 +1,20 @@
 'use client';
 
-import { Spinner } from '@/components/spinner';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
-import Link from 'next/link';
 import { useAuth } from '@/components/providers/auth-provider';
+import { getGithubAccessToken, getGitHubUser } from '@/app/actions';
 
 export const Heading = () => {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated } = useAuth();
+
+  async function getUser() {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const codeParam = urlParams.get('code') as string;
+    const accessToken = await getGithubAccessToken(codeParam);
+    const user = await getGitHubUser(accessToken.accessToken);
+  }
 
   return (
     <div className="max-w-3xl space-y-4">
@@ -18,17 +25,11 @@ export const Heading = () => {
       <h3 className="text-base sm:text-xl md:text-2xl font-medium">
         Botion is a connected workspace where great, gratuitous work happens.
       </h3>
-      {isLoading && (
-        <div className="w-full flex items-center justify-center">
-          <Spinner size="lg" />
-        </div>
-      )}
-      {isAuthenticated && !isLoading && (
-        <Button asChild>
-          <Link href="/documents">
-            Enter Botion
-            <ArrowRight className="h-4 w-4 ml-2" />
-          </Link>
+
+      {isAuthenticated && (
+        <Button onClick={() => {}}>
+          Enter Botion
+          <ArrowRight className="h-4 w-4 ml-2" />
         </Button>
       )}
     </div>

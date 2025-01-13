@@ -10,24 +10,14 @@ import { v4 as uuid } from 'uuid';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
 
-//user schema
+//tables
 export const usersTable = pgTable('users', {
   id: serial().primaryKey(),
   username: text().notNull().unique(),
   password: text().notNull(),
   createdOn: timestamp('created_on').defaultNow(),
 });
-export const userSchema = z.object({
-  username: z.string().min(1).max(255),
-  password: z.string().min(5).max(255),
-});
 
-export const insertUserSchema = createInsertSchema(usersTable, {
-  username: () => userSchema.shape.username,
-  password: () => userSchema.shape.password,
-});
-
-//note schema
 export const documentTable = pgTable(
   'documents',
   {
@@ -48,6 +38,13 @@ export const documentTable = pgTable(
   ]
 );
 
+//zod schema
+
+export const userSchema = z.object({
+  username: z.string().min(1).max(255),
+  password: z.string().min(5).max(255),
+});
+
 export const noteSchema = z.object({
   id: z.number(),
   title: z.string(),
@@ -59,6 +56,13 @@ export const noteSchema = z.object({
   coverImage: z.string().optional(),
   parentDocument: z.string().optional().optional(),
   createdOn: z.string(),
+});
+
+//note schema
+
+export const insertUserSchema = createInsertSchema(usersTable, {
+  username: () => userSchema.shape.username,
+  password: () => userSchema.shape.password,
 });
 
 export const insertDocumentSchema = createInsertSchema(documentTable, {

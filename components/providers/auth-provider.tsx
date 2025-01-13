@@ -1,7 +1,7 @@
 'use client';
 
-import { AuthContextType } from '@/lib/types';
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import { AuthContextType, UserObject } from '@/lib/types';
+import React, { createContext, useState, useContext } from 'react';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -9,30 +9,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [AccessToken, setAccessToken] = useState<string | null>(null);
   const [RefreshToken, setRefreshToken] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<UserObject | null>(null);
 
   const sessions: AuthContextType = {
     AccessToken,
     RefreshToken,
     isAuthenticated,
-    isLoading,
+    user,
     setAccessToken,
     setRefreshToken,
     setIsAuthenticated,
-    setIsLoading,
+    setUser,
   };
-
-  useEffect(() => {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const codeParam = urlParams.get('code');
-    if (codeParam) {
-      setAccessToken(codeParam);
-      setIsAuthenticated(true);
-      setIsLoading(false);
-    }
-    console.log(AccessToken);
-  }, [AccessToken]);
 
   return (
     <AuthContext.Provider value={sessions}>{children}</AuthContext.Provider>

@@ -21,11 +21,11 @@ accept: application/json
 
 ### Testing github request
 POST https://github.com/login/oauth/access_token?
-    client_id =
-    client_secret =
-    code =
+    client_id = Ov23liYM1ozG09dkyK5s &
+    client_secret = d687f482fe2ac3379e640ef98022ad91194806e3 &
+    code = 5d95e3381adfc432eeec
 
-Content-Type: application/json
+    Content-Type: application/json
 
 ### Testing GitHub user data
 GET https://api.github.com/user
