@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { redirect } from 'next/navigation';
 import React, { useState } from 'react';
 import { Logo } from './logo';
-import { SignupFormSchema } from '@/lib/schema';
+import { SignupFormSchema } from '@/app/api/db/schema';
 
 interface FormState {
   username: string;

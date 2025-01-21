@@ -57,7 +57,9 @@ export async function getGithubAccessToken(
   });
   if (!response.ok)
     throw new Error(`Error fetching access token: ${response.statusText}`);
-  return response.json();
+  const data = await response.json();
+  if (!data.access_token) throw new Error('Access token not found in response');
+  return data;
 }
 
 export async function getGitHubUser(accessToken: string): Promise<UserObject> {
@@ -70,5 +72,5 @@ export async function getGitHubUser(accessToken: string): Promise<UserObject> {
   });
   if (!response.ok)
     throw new Error(`Error fetching user data: ${response.statusText}`);
-  return response.json();
+  return await response.json();
 }

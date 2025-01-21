@@ -2,18 +2,31 @@
 
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
-import { useAuth } from '@/components/providers/auth-provider';
 import { getGithubAccessToken, getGitHubUser } from '@/app/actions';
 
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/components/providers/auth-provider';
+
 export const Heading = () => {
-  const { isAuthenticated } = useAuth();
+  const { setUser } = useAuth();
+  const router = useRouter();
+
+  function getCodeFromUrl(): string | null {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('code');
+  }
 
   async function getUser() {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const codeParam = urlParams.get('code') as string;
-    const accessToken = await getGithubAccessToken(codeParam);
-    const user = await getGitHubUser(accessToken.accessToken);
+    const codeParam = getCodeFromUrl() as string;
+    if (codeParam) {
+      const accessToken = await getGithubAccessToken(codeParam);
+      if (accessToken.accessToken) {
+        const user = await getGitHubUser(accessToken.accessToken);
+        console.log(user);
+        setUser(user);
+      }
+    }
+    //router.push('/documents');
   }
 
   return (
@@ -25,13 +38,10 @@ export const Heading = () => {
       <h3 className="text-base sm:text-xl md:text-2xl font-medium">
         Botion is a connected workspace where great, gratuitous work happens.
       </h3>
-
-      {isAuthenticated && (
-        <Button onClick={() => {}}>
-          Enter Botion
-          <ArrowRight className="h-4 w-4 ml-2" />
-        </Button>
-      )}
+      <Button onClick={getUser}>
+        Enter Botion
+        <ArrowRight className="h-4 w-4 ml-2" />
+      </Button>
     </div>
   );
 };

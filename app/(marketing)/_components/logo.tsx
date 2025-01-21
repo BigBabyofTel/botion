@@ -1,18 +1,25 @@
-import Image from "next/image";
-import { Poppins } from "next/font/google";
-import { cn } from "@/lib/utils";
-
-const font = Poppins({
-    subsets: ["latin"],
-    weight: ["400", "600"]
-});
+import Image from 'next/image';
 
 export const Logo = () => {
-    return (
-        <div className="hidden md:flex items-center gap-x-2">
-            <Image src="/botion-logo-light.svg" priority alt="Logo" width={40} height={40} className="dark:hidden" />
-            <Image src="/botion-logo-dark.svg" priority alt="Logo" width={40} height={40} className="hidden dark:block" />
-            <p className={cn("font-semibold",font.className)}>Botion</p>
-        </div>
-    )
-}
+  return (
+    <div className="hidden md:flex items-center gap-x-2">
+      <Image
+        src="/botion-logo-light.svg"
+        priority
+        alt="Logo"
+        width={40}
+        height={40}
+        className="dark:hidden"
+      />
+      <Image
+        src="/botion-logo-dark.svg"
+        priority
+        alt="Logo"
+        width={40}
+        height={40}
+        className="hidden dark:block"
+      />
+      <p className="font-semibold">Botion</p>
+    </div>
+  );
+};

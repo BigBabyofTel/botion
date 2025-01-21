@@ -7,15 +7,15 @@ import { PlusCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { create } from '@/app/actions';
-import { useAuth } from '@/components/providers/auth-provider';
+import { useSessionStore } from '@/lib/session-store';
 
 export default function DocumentsPage() {
   const router = useRouter();
-  const { AccessToken } = useAuth();
-
+  const { user } = useSessionStore();
+  console.log(user);
   const onCreate = () => {
-    const promise = create({ title: 'untitled', AccessToken }).then(
-      (documentId) => router.push(`/documents/${documentId.documentId}`)
+    const promise = create().then((documentId) =>
+      router.push(`/documents/${documentId.documentId}`)
     );
 
     toast.promise(promise, {
@@ -41,7 +41,9 @@ export default function DocumentsPage() {
         alt="empty"
         className="hidden dark:block"
       />
-      <h2 className="text-lg font-medium">Welcome to {}&apos;s Botion</h2>
+      <h2 className="text-lg font-medium">
+        Welcome to {user?.name}&apos;s Botion
+      </h2>
       <Button onClick={onCreate}>
         <PlusCircle className="h-4 w-4 mr-2 " />
         Create a note

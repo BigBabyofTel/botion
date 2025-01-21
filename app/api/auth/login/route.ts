@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { User } from '@/lib/types';
 import { verifyUser } from '@/lib/auth';
 import { ZodError } from 'zod';
-import { userSchema } from '@/lib/schema';
+import { userSchema } from '@/app/api/db/schema';
 import { createSession } from '@/utils/auth';
 
 export async function POST(req: NextRequest) {

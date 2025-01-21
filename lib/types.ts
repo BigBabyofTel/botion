@@ -8,7 +8,7 @@ export interface AuthContextType {
   setAccessToken: (token: string | null) => void;
   setRefreshToken: (token: string | null) => void;
   setIsAuthenticated: (auth: boolean) => void;
-  setUser: React.Dispatch<React.SetStateAction<UserObject | null>>;
+  setUser: (user: UserObject) => void;
 }
 
 export interface FormState {
@@ -48,4 +48,10 @@ export interface GithubAccessToken {
   accessToken: string;
   scope: string;
   token_type: string;
+}
+
+export interface SessionStore {
+  user: UserObject | null;
+  setUser: (user: UserObject) => void;
+  deleteUser: () => void;
 }

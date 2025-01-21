@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { Logo } from './logo';
 import { useAuth } from '@/components/providers/auth-provider';
-import { LoginFormSchema } from '@/lib/schema';
+import { LoginFormSchema } from '@/app/api/db/schema';
 import { FormState } from '@/lib/types';
 import { setUpSession } from '@/app/actions';
 
@@ -16,8 +16,7 @@ import { setUpSession } from '@/app/actions';
 export function LoginForm() {
   const [errors, setErrors] = useState<string[]>([]);
   const router = useRouter();
-  const { setIsAuthenticated, setAccessToken, setRefreshToken, setIsLoading } =
-    useAuth();
+  const { setIsAuthenticated, setAccessToken, setRefreshToken } = useAuth();
 
   const clientId = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID as string;
   const redirectUri = process.env.NEXT_PUBLIC_REDIRECT_URI as string;
@@ -74,7 +73,6 @@ export function LoginForm() {
             setIsAuthenticated(true);
             setAccessToken(token);
             setRefreshToken(reftoken);
-            setIsLoading(false);
           }
         });
         router.push('/');
@@ -90,7 +88,7 @@ export function LoginForm() {
 
   function handleGHLogin() {
     return router.push(
-      `https://github.com/login/oauth/authorize?client_id=${clientId}`
+      `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=read:user`
     );
   }
 
