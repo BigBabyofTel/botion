@@ -2,31 +2,25 @@
 
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
-import { getGithubAccessToken, getGitHubUser } from '@/app/actions';
-
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/providers/auth-provider';
+import { decodeAccessToken } from '@/utils/jwt';
 
 export const Heading = () => {
-  const { setUser } = useAuth();
+  const { AccessToken } = useAuth();
   const router = useRouter();
 
-  function getCodeFromUrl(): string | null {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('code');
-  }
-
-  async function getUser() {
-    const codeParam = getCodeFromUrl() as string;
-    if (codeParam) {
-      const accessToken = await getGithubAccessToken(codeParam);
-      if (accessToken.accessToken) {
-        const user = await getGitHubUser(accessToken.accessToken);
-        console.log(user);
-        setUser(user);
-      }
+  async function enterBotion() {
+    if (!AccessToken) {
+      return router.push('/login');
     }
-    //router.push('/documents');
+    const userData = await decodeAccessToken(AccessToken as string);
+    const payload = JSON.stringify(userData.payload);
+    sessionStorage.setItem('userData', payload);
+    if (AccessToken) {
+      sessionStorage.setItem('access_token', AccessToken);
+      return router.push('/documents');
+    }
   }
 
   return (
@@ -38,7 +32,7 @@ export const Heading = () => {
       <h3 className="text-base sm:text-xl md:text-2xl font-medium">
         Botion is a connected workspace where great, gratuitous work happens.
       </h3>
-      <Button onClick={getUser}>
+      <Button onClick={enterBotion}>
         Enter Botion
         <ArrowRight className="h-4 w-4 ml-2" />
       </Button>

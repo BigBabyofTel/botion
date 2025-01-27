@@ -9,7 +9,7 @@ export async function hashCheck(password: string, storedPW: string) {
   return bcrypt.compare(password, storedPW);
 }
 
-export async function createSession(accessToken: string) {
+export async function createSession(accessToken: string, refreshToken: string) {
   const cookieStore = await cookies();
   cookieStore.set({
     name: 'accessToken',
@@ -17,5 +17,12 @@ export async function createSession(accessToken: string) {
     httpOnly: true,
     path: '/',
     maxAge: 3600,
+  });
+  cookieStore.set({
+    name: 'refreshToken',
+    value: refreshToken,
+    httpOnly: true,
+    path: '/',
+    maxAge: 86400,
   });
 }

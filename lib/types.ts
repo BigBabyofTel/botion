@@ -23,6 +23,7 @@ export interface FormData {
 }
 
 export interface User {
+  email: string;
   username: string;
   password: string;
 }
@@ -38,9 +39,7 @@ export interface Tokens {
 }
 
 export interface UserObject {
-  login: string | null;
-  name: string | null;
-  avatar_url: string | null;
+  username: string | null;
   email: string | null;
 }
 
@@ -48,6 +47,14 @@ export interface GithubAccessToken {
   accessToken: string;
   scope: string;
   token_type: string;
+}
+
+export interface DecodedToken {
+  payload: {
+    username: string;
+    email: string;
+    exp: number;
+  };
 }
 
 export interface SessionStore {

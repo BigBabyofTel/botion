@@ -13,6 +13,7 @@ import { z } from 'zod';
 //sign up and log in schema
 export const SignupFormSchema = z
   .object({
+    email: z.string().email().trim(),
     username: z
       .string()
       .min(3, { message: 'Name must be at least 3 characters long.' })
@@ -43,6 +44,7 @@ export const SignupFormSchema = z
   });
 
 export const userSchema = z.object({
+  email: z.string().email().trim().optional(),
   username: z
     .string()
     .min(3, { message: 'Name must be at least 3 characters long.' })
@@ -63,12 +65,14 @@ export const LoginFormSchema = z.object({
 // user related
 export const usersTable = pgTable('users', {
   id: serial().primaryKey(),
+  email: text().notNull().unique(),
   username: text().notNull().unique(),
   password: text().notNull(),
   createdOn: timestamp('created_on').defaultNow(),
 });
 
 export const insertUserSchema = createInsertSchema(usersTable, {
+  email: () => userSchema.shape.email,
   username: () => userSchema.shape.username,
   password: () => userSchema.shape.password,
 });

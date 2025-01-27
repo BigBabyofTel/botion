@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { User } from '@/lib/types';
 import { verifyUser } from '@/lib/auth';
 import { ZodError } from 'zod';
 import { userSchema } from '@/app/api/db/schema';
@@ -7,7 +6,7 @@ import { createSession } from '@/utils/auth';
 
 export async function POST(req: NextRequest) {
   try {
-    const body: User = await req.json();
+    const body: { username: string; password: string } = await req.json();
     const { username, password } = userSchema.parse(body);
 
     const user = await verifyUser({ username, password });
@@ -17,7 +16,7 @@ export async function POST(req: NextRequest) {
       });
     }
     if (user) {
-      await createSession(user.accessToken);
+      await createSession(user.accessToken, user.refreshToken);
     }
 
     return new NextResponse(JSON.stringify({ message: 'login successful' }), {

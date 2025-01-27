@@ -12,9 +12,9 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const body: User = await req.json();
-    const { username, password } = body;
-    //function handles validation, hashing and adding to DB
-    await createUserData({ username, password });
+    const { username, password, email } = body;
+    //add parsing to verify data
+    await createUserData({ username, password, email });
     return new NextResponse(
       JSON.stringify({ message: 'User registered successfully' }),
       { status: 201 }

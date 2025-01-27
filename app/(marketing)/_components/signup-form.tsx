@@ -9,6 +9,7 @@ import { Logo } from './logo';
 import { SignupFormSchema } from '@/app/api/db/schema';
 
 interface FormState {
+  email: string;
   username: string;
   password: string;
   confirmPassword: string;
@@ -21,6 +22,7 @@ export function SignupForm() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const formState: FormState = {
+      email: formData.get('email') as string,
       username: formData.get('username') as string,
       password: formData.get('password') as string,
       confirmPassword: formData.get('confirm-password') as string,
@@ -57,6 +59,13 @@ export function SignupForm() {
           onSubmit={handleForm}
           className="w-1/3 p-5 border flex flex-col space-y-5 justify-center items-center"
         >
+          <Input
+            type="text"
+            name="email"
+            placeholder="Email"
+            required
+            className="border rounded-lg p-3"
+          />
           <Input
             type="text"
             name="username"

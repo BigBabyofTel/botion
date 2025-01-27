@@ -18,29 +18,6 @@ export function LoginForm() {
   const router = useRouter();
   const { setIsAuthenticated, setAccessToken, setRefreshToken } = useAuth();
 
-  const clientId = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID as string;
-  const redirectUri = process.env.NEXT_PUBLIC_REDIRECT_URI as string;
-
-  function googleLogin() {
-    const rootUrl = 'https://accounts.google.com/o/oauth2/v2/auth';
-    const options = {
-      redirect_uri: redirectUri,
-      client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string,
-      access_type: 'offline',
-      response_type: 'code',
-      flowName: 'GeneralOAuthFlow',
-      prompt: 'consent',
-      scope: [
-        'https://www.googleapis.com/auth/userinfo.profile',
-        'https://www.googleapis.com/auth/userinfo.email',
-      ].join(' '),
-    };
-
-    const qs = new URLSearchParams(options);
-
-    return `${rootUrl}?${qs.toString()}`;
-  }
-
   async function handleForm(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -86,21 +63,6 @@ export function LoginForm() {
     }
   }
 
-  function handleGHLogin() {
-    return router.push(
-      `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=read:user`
-    );
-  }
-
-  function handleDiscordLogin() {
-    return router.push(process.env.NEXT_PUBLIC_DISCORD_GEN_URL as string);
-  }
-
-  function handleGoogleLogin() {
-    const url = googleLogin() as string;
-    return router.push(url);
-  }
-
   return (
     <>
       <div className="h-[700px] p-2 w-full flex flex-col justify-evenly items-center">
@@ -131,9 +93,6 @@ export function LoginForm() {
             </div>
           )}
           <Button type="submit">Log In</Button>
-          <Button onClick={handleGHLogin}>Log With Github</Button>
-          <Button onClick={handleDiscordLogin}>Log in with Discord</Button>
-          <Button onClick={handleGoogleLogin}>Log in with Google</Button>
         </form>
       </div>
     </>

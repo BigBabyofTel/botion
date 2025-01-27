@@ -5,7 +5,7 @@ import { eq } from 'drizzle-orm';
 import { hashCheck, hashPassword } from '@/utils/auth';
 import { getJWT, getRefJWT } from '@/utils/jwt';
 
-export async function createUserData({ username, password }: User) {
+export async function createUserData({ username, password, email }: User) {
   const existingUser = await db
     .select()
     .from(usersTable)
@@ -14,10 +14,11 @@ export async function createUserData({ username, password }: User) {
   if (existingUser.length > 0) {
     throw new Error('User already exists');
   }
-  const validData = insertUserSchema.parse({ username, password });
+  const validData = insertUserSchema.parse({ username, password, email });
   const hashedPassword = await hashPassword(validData.password);
 
   const storedData = {
+    email: validData.email,
     username: validData.username,
     password: hashedPassword,
   };
@@ -28,7 +29,10 @@ export async function createUserData({ username, password }: User) {
 export async function verifyUser({
   username,
   password,
-}: User): Promise<Tokens | undefined> {
+}: {
+  username: string;
+  password: string;
+}): Promise<Tokens | undefined> {
   const results = await db
     .select()
     .from(usersTable)
@@ -37,10 +41,11 @@ export async function verifyUser({
 
   const userName = results[0].username as string;
   const isMatch = await hashCheck(password, results[0].password);
+  const email = results[0].email as string;
   if (userName !== username && !isMatch) throw new Error('There is no match');
 
   if (userName === username && isMatch) {
-    const accessToken = await getJWT(username);
+    const accessToken = await getJWT(username, email);
     const refreshToken = await getRefJWT(username);
 
     return { accessToken, refreshToken };

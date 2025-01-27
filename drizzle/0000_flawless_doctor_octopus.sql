@@ -1,7 +1,7 @@
 CREATE TABLE "documents" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"title" text,
-	"userId" text DEFAULT 'd5df1ad4-fd41-48e4-8da2-46f953e14aa7',
+	"userId" text DEFAULT '65f31999-b3bd-4705-871a-04234bea2c07',
 	"isArchived" boolean,
 	"isPublished" boolean,
 	"content" text,
@@ -13,9 +13,11 @@ CREATE TABLE "documents" (
 --> statement-breakpoint
 CREATE TABLE "users" (
 	"id" serial PRIMARY KEY NOT NULL,
+	"email" text NOT NULL,
 	"username" text NOT NULL,
 	"password" text NOT NULL,
 	"created_on" timestamp DEFAULT now(),
+	CONSTRAINT "users_email_unique" UNIQUE("email"),
 	CONSTRAINT "users_username_unique" UNIQUE("username")
 );
 --> statement-breakpoint

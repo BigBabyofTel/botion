@@ -1,8 +1,9 @@
 'use client';
 
 import { AuthContextType } from '@/lib/types';
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useSessionStore } from '@/lib/session-store';
+import { getCookie } from 'cookies-next';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -23,6 +24,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsAuthenticated,
     setUser,
   };
+  // add condition to check for access token if none then redirect to log in or request it
+  useEffect(() => {
+    const accessToken = getCookie('access_token') as string;
+    const refreshToken = getCookie('refresh_token') as string;
+    if (accessToken) {
+      setAccessToken(accessToken);
+      setRefreshToken(refreshToken);
+      setIsAuthenticated(true);
+    }
+  }, [AccessToken]);
 
   return (
     <AuthContext.Provider value={sessions}>{children}</AuthContext.Provider>

@@ -22,9 +22,6 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  url.searchParams.append('client_id', clientId);
-  url.searchParams.append('client_secret', clientSecret);
-
   const code = req.nextUrl.searchParams.get('code');
 
   if (!code) {
@@ -35,14 +32,18 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  url.searchParams.append('code', code);
-
   try {
     const response = await fetch(url.toString(), {
       method: 'POST',
       headers: {
         Accept: 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
+      body: new URLSearchParams({
+        client_id: clientId,
+        client_secret: clientSecret,
+        code,
+      }).toString(),
     });
     if (!response.ok) {
       const errorData = await response.json();
