@@ -4,21 +4,19 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/providers/auth-provider';
-import { decodeAccessToken } from '@/utils/jwt';
+
+import { user } from '@/services/user.service';
 
 export const Heading = () => {
-  const { AccessToken } = useAuth();
+  const { AccessToken, RefreshToken } = useAuth();
   const router = useRouter();
 
   async function enterBotion() {
-    if (!AccessToken) {
-      return router.push('/login');
-    }
-    const userData = await decodeAccessToken(AccessToken as string);
-    const payload = JSON.stringify(userData.payload);
-    sessionStorage.setItem('userData', payload);
     if (AccessToken) {
-      sessionStorage.setItem('access_token', AccessToken);
+      await user.decodeAccessToken(AccessToken as string);
+    }
+    if (user.getIsAuthenticated === true) {
+      user.setToSessionStorage();
       return router.push('/documents');
     }
   }

@@ -9,7 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 interface documentIdPageProps {
   params: {
-    documentId: Id<'documents'>;
+    documentId: string;
   };
 }
 
@@ -18,16 +18,14 @@ const DocumentIdPage = ({ params }: documentIdPageProps) => {
     () => dynamic(() => import('@/components/editor'), { ssr: false }),
     []
   );
-  const document = useQuery(api.documents.getById, {
-    documentId: params.documentId,
-  });
 
-  const update = useMutation(api.documents.update);
+  //func to get document id
 
-  const onChange = (content: string) => {
-    update({ id: params.documentId, content });
-  };
-
+  /*
+    const onChange = (content: string) => {
+      update({ id: params.documentId, content });
+    };
+  */
   if (document === undefined) {
     return (
       <div>
@@ -50,10 +48,14 @@ const DocumentIdPage = ({ params }: documentIdPageProps) => {
 
   return (
     <div className="pb-40">
-      <Cover url={document.coverImage} />
+      {/* set cover image from db */}
+      <Cover url={undefined} />
       <div className="md:max-w-3xl lg:max-w-4xl mx-auto">
         <Toolbar initialData={document} />
-        <Editor onChange={onChange} initialContent={document.content} />
+        {/*
+        add the document content and change function
+        */}
+        <Editor onChange={() => {}} initialContent={''} />
       </div>
     </div>
   );

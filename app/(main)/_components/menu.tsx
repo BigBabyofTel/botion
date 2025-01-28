@@ -22,19 +22,9 @@ interface MenuProps {
 export const Menu = ({ documentId }: MenuProps) => {
   const router = useRouter();
 
-  const archive = useMutation(api.documents.archive);
+  //const archive = useMutation(api.documents.archive);
 
-  const onArchive = () => {
-    const promise = archive({ id: documentId });
-
-    toast.promise(promise, {
-      loading: 'Moving to trash...',
-      success: 'Moved to trash!',
-      error: 'Failed to archive note.',
-    });
-    router.push('/documents');
-  };
-
+  //const onArchive = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -48,7 +38,7 @@ export const Menu = ({ documentId }: MenuProps) => {
         alignOffset={8}
         forceMount
       >
-        <DropdownMenuItem onClick={onArchive}>
+        <DropdownMenuItem onClick={() => {}}>
           <Trash className="h-4 w-4 mr-2" />
           Delete
         </DropdownMenuItem>
@@ -62,6 +52,8 @@ export const Menu = ({ documentId }: MenuProps) => {
   );
 };
 
+/*
 Menu.Skeleton = function MenuSkeleton() {
   return <Skeleton className="h-10 w-10" />;
 };
+*/

@@ -24,10 +24,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsAuthenticated,
     setUser,
   };
+
   // add condition to check for access token if none then redirect to log in or request it
   useEffect(() => {
-    const accessToken = getCookie('access_token') as string;
-    const refreshToken = getCookie('refresh_token') as string;
+    const accessToken = getCookie('accessToken') as string;
+    const refreshToken = getCookie('refreshToken') as string;
     if (accessToken) {
       setAccessToken(accessToken);
       setRefreshToken(refreshToken);

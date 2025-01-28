@@ -3,6 +3,7 @@
 import { db } from '@/app/api/db/db';
 import { documentTable } from '@/app/api/db/schema';
 import { verifyToken } from '@/utils/jwt';
+import { user } from '@/services/user.service';
 
 export interface CreateTypes {
   title: string;
@@ -10,7 +11,7 @@ export interface CreateTypes {
 }
 
 //redo this create fn
-export async function create({ title, AccessToken }: CreateTypes) {
+export async function create({ title = 'Untitled', AccessToken }: CreateTypes) {
   if (AccessToken === null) {
     throw new Error('Token is not valid');
   } else {
@@ -20,10 +21,15 @@ export async function create({ title, AccessToken }: CreateTypes) {
       isArchived: false,
     });
   }
-  const documentId = await db
-    .select({ documentId: documentTable.userId })
-    .from(documentTable);
-  return { documentId };
+}
+
+export async function getDocumentsUserId(access_token: string | null) {
+  if (access_token === null) {
+    throw new Error('Token is not valid');
+  } else {
+    const documentId = await db.selectDistinct().from(documentTable);
+    return documentId[0].userId;
+  }
 }
 
 export async function setUpSession(token: string, refToken: string) {
