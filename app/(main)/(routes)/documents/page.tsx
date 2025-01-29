@@ -8,11 +8,11 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { create, getDocumentsUserId } from '@/app/actions';
 import { useAuth } from '@/components/providers/auth-provider';
-import { user } from '@/services/user.service';
+import { useEffect } from 'react';
 
 export default function DocumentsPage() {
   const router = useRouter();
-  const AccessToken = user.getAccessToken;
+  const { user, AccessToken } = useAuth();
 
   const onCreate = () => {
     const promise = getDocumentsUserId(AccessToken).then((documentId) =>
@@ -43,7 +43,7 @@ export default function DocumentsPage() {
         className="hidden dark:block"
       />
       <h2 className="text-lg font-medium">
-        Welcome to {user.getUsername}&apos;s Botion
+        Welcome to {user?.username}&apos;s Botion
       </h2>
       <Button onClick={onCreate}>
         <PlusCircle className="h-4 w-4 mr-2 " />

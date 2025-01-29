@@ -10,10 +10,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { user } from '@/services/user.service';
+import { useEffect } from 'react';
+import { useAuth } from '@/components/providers/auth-provider';
 
 export default function UserItem() {
-  const email = user.getEmail;
-  const username = user.getUsername;
+  const { user } = useAuth();
 
   return (
     <DropdownMenu>
@@ -27,7 +28,7 @@ export default function UserItem() {
               <AvatarImage />
             </Avatar>
             <span className="text-start font-medium line-clamp-1">
-              {email}&apos;s Botion
+              {user?.email}&apos;s Botion
             </span>
           </div>
           <ChevronsLeftRight className="rotate-90 ml-2 text-muted-foreground h-4 w-4" />
@@ -41,7 +42,7 @@ export default function UserItem() {
       >
         <div className="flex flex-col space-y-4 p-2">
           <p className="text-xs font-medium leading-none text-muted-foreground">
-            {email}
+            {user?.email}
           </p>
 
           <div className="flex items-center gap-x-2">
@@ -51,7 +52,9 @@ export default function UserItem() {
               </Avatar>
             </div>
             <div className="space-y-1">
-              <p className="text-sm line-clamp-1">{username}&apos;s Botion</p>
+              <p className="text-sm line-clamp-1">
+                {user?.username}&apos;s Botion
+              </p>
             </div>
           </div>
         </div>

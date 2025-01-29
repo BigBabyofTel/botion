@@ -1,4 +1,5 @@
 import { decodeAccessToken } from '@/utils/jwt';
+import { UserObject } from '@/lib/types';
 
 export interface UserClass {
   username: string;
@@ -76,12 +77,15 @@ class UserService {
   }
 
   //func to decrypt token
-  public async decodeAccessToken(accessToken: string) {
+  public async decodeAccessToken(
+    accessToken: string
+  ): Promise<UserObject | string> {
     const decodedToken = await decodeAccessToken(accessToken);
     if (decodedToken) {
       this.username = decodedToken.payload.username as string;
       this.email = decodedToken.payload.email as string;
       this.isAuthenticated = true;
+      return { username: this.username, email: this.email };
     } else {
       return `Failed to decode token`;
     }

@@ -26,8 +26,10 @@ export async function verifyToken(token: string): Promise<JWTPayload> {
 }
 
 export async function decodeAccessToken(token: string): Promise<DecodedToken> {
-  const { payload } = decode(token) as unknown as DecodedToken;
-  return { payload };
+  if (token) {
+    const { payload } = decode(token) as unknown as DecodedToken;
+    return { payload };
+  }
 }
 
 export async function verifyRefreshToken(

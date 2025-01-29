@@ -9,6 +9,8 @@ export interface AuthContextType {
   setRefreshToken: (token: string | null) => void;
   setIsAuthenticated: (auth: boolean) => void;
   setUser: (user: UserObject) => void;
+  deleteUser: () => void;
+  deleteToken: () => void;
 }
 
 export interface FormState {

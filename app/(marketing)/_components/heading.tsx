@@ -8,15 +8,11 @@ import { useAuth } from '@/components/providers/auth-provider';
 import { user } from '@/services/user.service';
 
 export const Heading = () => {
-  const { AccessToken, RefreshToken } = useAuth();
+  const { AccessToken } = useAuth();
   const router = useRouter();
 
   async function enterBotion() {
     if (AccessToken) {
-      await user.decodeAccessToken(AccessToken as string);
-    }
-    if (user.getIsAuthenticated === true) {
-      user.setToSessionStorage();
       return router.push('/documents');
     }
   }
