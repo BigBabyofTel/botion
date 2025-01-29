@@ -6,14 +6,14 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useAuth } from '@/components/providers/auth-provider';
+import { user } from '@/services/user.service';
 
 export default function UserItem() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const email = user.getEmail;
+  const username = user.getUsername;
 
   return (
     <DropdownMenu>
@@ -23,14 +23,12 @@ export default function UserItem() {
           className="flex items-center text-sm p-3 w-full hover:bg-primary/5"
         >
           <div className="gap-x-2 flex items-center max-w-[150px]">
-            {/*
             <Avatar className="h-5 w-5">
-               <AvatarImage src={session?.user?.image as string} />
+              <AvatarImage />
             </Avatar>
             <span className="text-start font-medium line-clamp-1">
-              {session?.user?.name as string}&apos;s Botion}
+              {email}&apos;s Botion
             </span>
-            */}
           </div>
           <ChevronsLeftRight className="rotate-90 ml-2 text-muted-foreground h-4 w-4" />
         </div>
@@ -42,25 +40,18 @@ export default function UserItem() {
         forceMount
       >
         <div className="flex flex-col space-y-4 p-2">
-          {/*
           <p className="text-xs font-medium leading-none text-muted-foreground">
-            {session?.user?.email}
+            {email}
           </p>
-          */}
+
           <div className="flex items-center gap-x-2">
             <div className="rounded-md bg-secondary p-1">
-              {/*
               <Avatar className="h-8 w-8">
-                <AvatarImage src={session?.user?.image as string} />
+                <AvatarImage />
               </Avatar>
-              */}
             </div>
             <div className="space-y-1">
-              {/*
-              <p className="text-sm line-clamp-1">
-                {session?.user?.name as string}&apos;s Botion
-              </p>
-              */}
+              <p className="text-sm line-clamp-1">{username}&apos;s Botion</p>
             </div>
           </div>
         </div>

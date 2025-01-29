@@ -27,7 +27,7 @@ export default function DocumentsPage() {
   };
 
   return (
-    <div className="h-full flex flex-col items-center justify-center space-y-4">
+    <div className="h-dvh flex flex-col items-center justify-center space-y-4">
       <Image
         src="/empty.webp"
         height="300"

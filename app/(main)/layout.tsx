@@ -5,6 +5,7 @@ import { useAuth } from '@/components/providers/auth-provider';
 
 import Navigation from './_components/navigation';
 import React from 'react';
+import { user } from '@/services/user.service';
 //import { SearchCommand } from "@/components/search-command";
 
 export default function MainLayout({
@@ -15,12 +16,13 @@ export default function MainLayout({
   {
     /** add user info */
   }
-  const { isAuthenticated } = useAuth();
+
+  const isAuthenticated = user.getIsAuthenticated;
 
   if (isAuthenticated) {
   }
   return (
-    <div className="h-full flex dark:bg-[#1f1f1f]">
+    <div className="h-dvh flex dark:bg-[#1f1f1f]">
       <Navigation />
       {/**
        <SearchCommand />
