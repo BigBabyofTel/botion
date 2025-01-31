@@ -6,17 +6,21 @@ import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { create, getDocumentsUserId } from '@/app/actions';
+import { create } from '@/app/actions';
 import { useAuth } from '@/components/providers/auth-provider';
-import { useEffect } from 'react';
 
 export default function DocumentsPage() {
   const router = useRouter();
-  const { user, AccessToken } = useAuth();
+  const { user, AccessToken, setUserId } = useAuth();
 
   const onCreate = () => {
-    const promise = getDocumentsUserId(AccessToken).then((documentId) =>
-      router.push(`/documents/${documentId}`)
+    const promise = create({ title: 'Untitled', AccessToken }).then(
+      (document) => {
+        const documentId = document?.doc.documentId as string;
+        const iD = document?.doc.userId as string;
+        setUserId(iD);
+        router.push(`/documents/${documentId}`);
+      }
     );
 
     toast.promise(promise, {

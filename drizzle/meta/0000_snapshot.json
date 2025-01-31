@@ -1,5 +1,5 @@
 {
-  "id": "cd03de53-a1e7-41ed-98f1-945d46eec7e3",
+  "id": "05c2c94a-db8f-42a2-870d-70e9ee25e8ed",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -22,22 +22,30 @@
         },
         "userId": {
           "name": "userId",
-          "type": "text",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "documentId": {
+          "name": "documentId",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false,
-          "default": "'65f31999-b3bd-4705-871a-04234bea2c07'"
+          "default": "gen_random_uuid()"
         },
         "isArchived": {
           "name": "isArchived",
           "type": "boolean",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": false
         },
         "isPublished": {
           "name": "isPublished",
           "type": "boolean",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": false
         },
         "content": {
           "name": "content",
@@ -59,7 +67,7 @@
         },
         "parentDocument": {
           "name": "parentDocument",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -92,6 +100,21 @@
           "columns": [
             {
               "expression": "parentDocument",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "docId_idx": {
+          "name": "docId_idx",
+          "columns": [
+            {
+              "expression": "documentId",
               "isExpression": false,
               "asc": true,
               "nulls": "last"

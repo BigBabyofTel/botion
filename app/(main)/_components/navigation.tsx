@@ -32,7 +32,7 @@ import { useAuth } from '@/components/providers/auth-provider';
 
 export default function Navigation() {
   const router = useRouter();
-  const { AccessToken } = useAuth();
+  const { AccessToken, userId } = useAuth();
   const settings = useSettings();
   const search = useSearch();
   const params = useParams();

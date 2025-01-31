@@ -7,6 +7,8 @@ export const useSessionStore = create<AuthContextType>()(
     (set) => ({
       AccessToken: null,
       RefreshToken: null,
+      userId: null,
+      setUserId: (userId) => set({ userId }),
       isAuthenticated: false,
       setAccessToken: (AccessToken) => set({ AccessToken }),
       setRefreshToken: (RefreshToken) => set({ RefreshToken }),
@@ -17,6 +19,7 @@ export const useSessionStore = create<AuthContextType>()(
         set({ user });
       },
       deleteUser: () => set({ user: null }),
+      deleteUserId: () => set({ userId: null }),
     }),
     {
       name: 'persistUser',

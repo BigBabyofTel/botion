@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 
 import IconPicker from './icon-picker';
 import { ImageIcon, Smile, X } from 'lucide-react';
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import TextareaAutosize from 'react-textarea-autosize';
 import { useCoverImage } from '@/hooks/use-cover-image';
@@ -15,7 +15,7 @@ interface ToolbarProps {
 }
 
 const Toolbar = ({ initialData, preview }: ToolbarProps) => {
-  const inputRef = useRef<'textarea'>(null);
+  const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(initialData.title);
 

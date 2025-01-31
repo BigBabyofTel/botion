@@ -1,7 +1,7 @@
 'use client';
 
 import { AuthContextType, UserObject } from '@/lib/types';
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 import { useSessionStore } from '@/lib/session-store';
 import { getCookie } from 'cookies-next';
 import * as U from '@/services/user.service';
@@ -12,6 +12,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const {
     user,
     setUser,
+    userId,
+    setUserId,
+    deleteUserId,
     isAuthenticated,
     setIsAuthenticated,
     setAccessToken,
@@ -27,6 +30,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     RefreshToken,
     isAuthenticated,
     user,
+    userId,
+    setUserId,
+    deleteUserId,
     setAccessToken,
     setRefreshToken,
     setIsAuthenticated,

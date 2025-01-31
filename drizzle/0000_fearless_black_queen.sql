@@ -1,13 +1,14 @@
 CREATE TABLE "documents" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"title" text,
-	"userId" text DEFAULT '65f31999-b3bd-4705-871a-04234bea2c07',
-	"isArchived" boolean,
-	"isPublished" boolean,
+	"userId" uuid,
+	"documentId" uuid DEFAULT gen_random_uuid(),
+	"isArchived" boolean DEFAULT false,
+	"isPublished" boolean DEFAULT false,
 	"content" text,
 	"icon" text,
 	"coverImage" text,
-	"parentDocument" text,
+	"parentDocument" uuid,
 	"created_on" timestamp DEFAULT now()
 );
 --> statement-breakpoint
@@ -22,4 +23,5 @@ CREATE TABLE "users" (
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX "userId_idx" ON "documents" USING btree ("userId");--> statement-breakpoint
-CREATE UNIQUE INDEX "parentDoc_idx" ON "documents" USING btree ("parentDocument");
+CREATE UNIQUE INDEX "parentDoc_idx" ON "documents" USING btree ("parentDocument");--> statement-breakpoint
+CREATE UNIQUE INDEX "docId_idx" ON "documents" USING btree ("documentId");

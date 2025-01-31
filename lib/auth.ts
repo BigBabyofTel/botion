@@ -18,7 +18,7 @@ export async function createUserData({ username, password, email }: User) {
   const hashedPassword = await hashPassword(validData.password);
 
   const storedData = {
-    email: validData.email,
+    email: validData.email as string,
     username: validData.username,
     password: hashedPassword,
   };

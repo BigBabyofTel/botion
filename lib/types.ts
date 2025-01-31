@@ -3,14 +3,17 @@ import React from 'react';
 export interface AuthContextType {
   AccessToken: string | null;
   RefreshToken: string | null;
+  userId: string | null;
   isAuthenticated: boolean;
   user: UserObject | null;
   setAccessToken: (token: string | null) => void;
   setRefreshToken: (token: string | null) => void;
   setIsAuthenticated: (auth: boolean) => void;
   setUser: (user: UserObject) => void;
+  setUserId: (userId: string) => void;
   deleteUser: () => void;
   deleteToken: () => void;
+  deleteUserId: () => void;
 }
 
 export interface FormState {
@@ -43,6 +46,7 @@ export interface Tokens {
 export interface UserObject {
   username: string | null;
   email: string | null;
+  userId: string | null;
 }
 
 export interface GithubAccessToken {

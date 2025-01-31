@@ -1,27 +1,51 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Item from './item';
 import { cn } from '@/lib/utils';
 import { FileIcon } from 'lucide-react';
 import { useAuth } from '@/components/providers/auth-provider';
+import { documentSchema } from '@/app/api/db/schema';
+import { getSidebar, SidebarTypes } from '@/app/actions';
+import { z } from 'zod';
 
 interface DocumentListProps {
-  parentDocumentId?: Id<'documents'>;
   level?: number;
-  data?: Doc<'documents'>[];
+  data?: (typeof documentSchema)[];
+  parentDocument?: string | undefined;
 }
 
 export default function DocumentList({
-  parentDocumentId,
   level = 0,
+  parentDocument,
 }: DocumentListProps) {
   const params = useParams();
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, userId } = useAuth();
 
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const [docs, setDocs] = useState<z.infer<typeof documentSchema>[]>([]);
+
+  useEffect(() => {
+    async function fetchDocs() {
+      const sidebarDocs = await getSidebar({ userId } as SidebarTypes);
+      const formattedDocs = sidebarDocs.map((doc) => ({
+        title: doc.title ?? '',
+        userId: doc.userId ?? '',
+        documentId: doc.documentId ?? '',
+        isArchived: doc.isArchived ?? false,
+        isPublished: doc.isPublished ?? false,
+        content: doc.content ?? '',
+        icon: doc.icon ?? '',
+        coverImage: doc.coverImage ?? '',
+        parentDocument: doc.parentDocument ?? '',
+      }));
+      setDocs(formattedDocs);
+    }
+
+    void fetchDocs();
+  }, [userId]);
 
   const onExpand = (documentId: string) => {
     setExpanded((prevExpanded) => ({
@@ -34,7 +58,7 @@ export default function DocumentList({
     router.push(`/documents/${documentId}`);
   };
 
-  if (isAuthenticated) {
+  if (!isAuthenticated) {
     return (
       <>
         <Item.Skeleton level={level} />
@@ -62,26 +86,27 @@ export default function DocumentList({
       >
         No pages inside
       </p>
-
-      {/*
-      {documents.map((document) => (
-        <div key={document._id}>
+      {docs.map((document) => (
+        <div key={document.documentId}>
           <Item
-            id={document._id}
-            onClick={() => onRedirect(document._id)}
+            id={document.documentId}
+            onClick={() => onRedirect(document.documentId)}
             label={document.title}
             icon={FileIcon}
             documentIcon={document.icon}
-            active={params.documentId === document._id}
+            active={params.documentId === document.documentId}
             level={level}
-            onExpand={() => onExpand(document._id)}
-            expanded={expanded[document._id]}
+            onExpand={() => onExpand(document.documentId)}
+            expanded={expanded[document.documentId]}
           />
-          {expanded[document._id] && (
-            <DocumentList parentDocumentId={document._id} level={level + 1} />
+          {expanded[document.documentId] && (
+            <DocumentList
+              parentDocument={document.parentDocument}
+              level={level + 1}
+            />
           )}
         </div>
-      ))}*/}
+      ))}
     </>
   );
 }

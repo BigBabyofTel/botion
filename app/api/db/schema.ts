@@ -5,9 +5,10 @@ import {
   text,
   boolean,
   uniqueIndex,
+  uuid,
 } from 'drizzle-orm/pg-core';
-import { v4 as uuid } from 'uuid';
-import { createInsertSchema } from 'drizzle-zod';
+
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { z } from 'zod';
 
 //sign up and log in schema
@@ -83,43 +84,56 @@ export const documentTable = pgTable(
   {
     id: serial().primaryKey(),
     title: text(),
-    userId: text().default(uuid()),
-    isArchived: boolean(),
-    isPublished: boolean(),
+    userId: uuid(),
+    documentId: uuid().defaultRandom(),
+    isArchived: boolean().default(false),
+    isPublished: boolean().default(false),
     content: text(),
     icon: text(),
     coverImage: text(),
-    parentDocument: text(),
+    parentDocument: uuid(),
     createdOn: timestamp('created_on').defaultNow(),
   },
   (table) => [
     uniqueIndex('userId_idx').on(table.userId),
     uniqueIndex('parentDoc_idx').on(table.parentDocument),
+    uniqueIndex('docId_idx').on(table.documentId),
   ]
 );
 
 export const documentSchema = z.object({
-  id: z.number(),
   title: z.string(),
-  userId: z.string(),
-  isArchived: z.boolean().optional(),
-  isPublished: z.boolean().optional(),
+  userId: z.string().uuid(),
+  documentId: z.string().uuid(),
+  isArchived: z.boolean().default(false),
+  isPublished: z.boolean().default(false),
   content: z.string().optional(),
   icon: z.string().optional(),
   coverImage: z.string().optional(),
-  parentDocument: z.string().optional().optional(),
-  createdOn: z.string(),
+  parentDocument: z.string().uuid().optional(),
 });
 
 export const insertDocumentSchema = createInsertSchema(documentTable, {
-  id: () => documentSchema.shape.id,
   title: () => documentSchema.shape.title,
-  userId: () => documentSchema.shape.userId,
-  isArchived: () => documentSchema.shape.isArchived,
-  isPublished: () => documentSchema.shape.isPublished,
-  content: () => documentSchema.shape.content,
-  icon: () => documentSchema.shape.icon,
-  coverImage: () => documentSchema.shape.coverImage,
-  parentDocument: () => documentSchema.shape.parentDocument,
-  createdOn: () => documentSchema.shape.createdOn,
+  userId: () => documentSchema.shape.userId.optional(),
+  isArchived: () => documentSchema.shape.isArchived.optional(),
+  isPublished: () => documentSchema.shape.isPublished.optional(),
+  content: () => documentSchema.shape.content.optional(),
+  icon: () => documentSchema.shape.icon.optional(),
+  coverImage: () => documentSchema.shape.coverImage.optional(),
+  parentDocument: () => documentSchema.shape.parentDocument.optional(),
+});
+
+export const selectDocumentSchema = createSelectSchema(documentTable, {
+  title: () => documentSchema.shape.title,
+  userId: () => documentSchema.shape.userId.uuid().optional(),
+  documentId: () => documentSchema.shape.documentId.optional(),
+  isArchived: () => documentSchema.shape.isArchived.optional(),
+  isPublished: () => documentSchema.shape.isPublished.optional(),
+  content: () => documentSchema.shape.content.optional(),
+  icon: () => documentSchema.shape.icon.optional(),
+  coverImage: () => documentSchema.shape.coverImage.optional(),
+  parentDocument: () => documentSchema.shape.parentDocument.optional(),
+  createdOn: () => z.date().optional(),
+  id: () => z.number().optional(),
 });

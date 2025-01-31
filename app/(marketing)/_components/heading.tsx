@@ -8,12 +8,14 @@ import { useAuth } from '@/components/providers/auth-provider';
 import { user } from '@/services/user.service';
 
 export const Heading = () => {
-  const { AccessToken } = useAuth();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
 
   async function enterBotion() {
-    if (AccessToken) {
+    if (isAuthenticated) {
       return router.push('/documents');
+    } else {
+      return router.push('/auth/signup');
     }
   }
 

@@ -20,9 +20,10 @@ import {
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import React from 'react';
+import { create } from '@/app/actions';
+import { useAuth } from '@/components/providers/auth-provider';
 
 interface ItemsProps {
-  id?: Id<'documents'>;
   documentIcon?: string;
   active?: boolean;
   expanded?: boolean;
@@ -35,7 +36,6 @@ interface ItemsProps {
 }
 
 export default function Item({
-  id,
   label,
   onClick,
   icon: Icon,
@@ -47,11 +47,14 @@ export default function Item({
   expanded,
 }: ItemsProps) {
   const router = useRouter();
+  const { AccessToken, userId } = useAuth();
+
+  const id = userId as string;
 
   const onArchive = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
-    if (!id) return;
-    const promise = archive({ id }).then(() => {
+    if (!userId) return;
+    const promise = archive({ userId }).then(() => {
       router.push('/documents');
     });
     toast.promise(promise, {
@@ -71,14 +74,16 @@ export default function Item({
   const onCreate = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
     if (!id) return;
-    const promise = create({ title: 'Untitled', parentDocument: id }).then(
-      (documentId) => {
-        if (!expanded) {
-          onExpand?.();
-        }
-        router.push(`/documents/${documentId}`);
+    const promise = create({
+      title: 'Untitled',
+      AccessToken,
+      parentDocument: id,
+    }).then((documentId) => {
+      if (!expanded) {
+        onExpand?.();
       }
-    );
+      router.push(`/documents/${documentId}`);
+    });
 
     toast.promise(promise, {
       loading: 'Creating document...',
@@ -99,7 +104,7 @@ export default function Item({
         active && 'bg-primary/5 text-primary'
       )}
     >
-      {!!id && (
+      {id && (
         <div
           role="button"
           className="h-full rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 mr-1"
@@ -120,7 +125,7 @@ export default function Item({
           <span className="text-sm">⌘</span>K
         </kbd>
       )}
-      {!!id && (
+      {id && (
         <div className="ml-auto flex items-center gap-x-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
