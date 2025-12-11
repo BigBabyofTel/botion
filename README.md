@@ -2,12 +2,9 @@
 
 ## This is a notion clone
 
-### using Next.js and Tailwind CSS
+## V3 is in development
 
-### API routes with Next.js API routes
-
-### will be using Drizzle ORM for database on Neon servers
-
-### JWTs for authentication
-
-
+### updates
+    - realtime database is needed
+    - authorization is needed
+    - make sure project is dockerized
