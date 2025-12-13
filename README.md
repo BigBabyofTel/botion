@@ -5,6 +5,7 @@
 ## V3 is in development
 
 ### updates
-    - realtime database is needed
-    - authorization is needed
+    - convex will be used for the backend
+    - betterauth will be used for the authentication
     - make sure project is dockerized
+
