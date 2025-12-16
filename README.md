@@ -9,3 +9,6 @@
     - betterauth will be used for the authentication
     - make sure project is dockerized
 
+
+### links
+    - https://convex-better-auth.netlify.app/framework-guides/next
