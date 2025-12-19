@@ -12,3 +12,6 @@
 
 ### links
     - https://convex-better-auth.netlify.app/framework-guides/next
+
+### To-do
+    switch out old auth stuff for convex and better auth
