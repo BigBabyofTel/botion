@@ -3,10 +3,28 @@
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { authClient } from '@/lib/auth-client';
+import { useEffect, useState } from 'react';
 
-export const Heading = () => {
-  const { isAuthenticated } = useAuth();
+const Heading = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        const session = await authClient.getSession();
+        setIsAuthenticated(!!session.data?.user);
+      } catch (error) {
+        setIsAuthenticated(false);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    checkAuth();
+  }, []);
 
   async function enterBotion() {
     if (isAuthenticated) {
@@ -15,6 +33,8 @@ export const Heading = () => {
       return router.push('/auth/signup');
     }
   }
+
+  if (loading) return null;
 
   return (
     <div className="max-w-3xl space-y-4">
@@ -32,3 +52,4 @@ export const Heading = () => {
     </div>
   );
 };
+export default Heading;

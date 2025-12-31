@@ -6,17 +6,15 @@ import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { Logo } from './logo';
-import { useAuth } from '@/components/providers/auth-provider';
 import { LoginFormSchema } from '@/app/api/db/schema';
 import { FormState } from '@/lib/types';
-import { setUpSession } from '@/app/actions';
+import { authClient } from '@/lib/auth-client';
 
 // Define the schema for login validation
 
 export function LoginForm() {
   const [errors, setErrors] = useState<string[]>([]);
   const router = useRouter();
-  const { setIsAuthenticated, setAccessToken, setRefreshToken } = useAuth();
 
   async function handleForm(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -27,34 +25,18 @@ export function LoginForm() {
     };
 
     try {
-      // Validate the form data against the schema
       LoginFormSchema.parse(formState);
       setErrors([]);
 
-      // Send login request to the API
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formState),
+      const { data, error } = await authClient.signIn.email({
+        email: formState.username,
+        password: formState.password,
       });
 
-      // Check if the response is successful
-      if (response.ok) {
-        const headers = response.headers;
-        const token = headers.get('authorization') as string;
-        const reftoken = headers.get('refresher') as string;
-        await setUpSession(token, reftoken).then((success) => {
-          if (success) {
-            setIsAuthenticated(true);
-            setAccessToken(token);
-            setRefreshToken(reftoken);
-          }
-        });
-        router.push('/');
+      if (error) {
+        setErrors([error.message || 'Failed to log in.']);
       } else {
-        setErrors(['Failed to log in. Please check your credentials.']);
+        router.push('/');
       }
     } catch (err) {
       if (err instanceof z.ZodError) {

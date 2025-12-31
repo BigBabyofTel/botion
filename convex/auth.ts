@@ -22,6 +22,8 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
       // The Convex plugin is required for Convex compatibility
       convex({ authConfig }),
     ],
+    // Configure the social providers you want to support. github and discord
+    socialProviders: {},
   });
 };
 // Example function for getting the current user

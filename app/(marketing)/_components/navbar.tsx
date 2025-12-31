@@ -8,13 +8,38 @@ import { ModeToggle } from '@/components/mode-toggle';
 import { Button } from '@/components/ui/button';
 //import { Spinner } from "@/components/spinner";
 import Link from 'next/link';
-import { useAuth } from '@/components/providers/auth-provider';
 import { redirect } from 'next/navigation';
+import { authClient } from '@/lib/auth-client';
+import { useState, useEffect } from 'react';
 
 export const Navbar = () => {
-  const { isAuthenticated } = useAuth();
-
   const scrolled = useScrollTop();
+  const [authenticated, setAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        const session = await authClient.getSession();
+        setAuthenticated(!!session.data?.user);
+      } catch (error) {
+        setAuthenticated(false);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    checkAuth();
+  }, []);
+
+  const handleSignOut = async () => {
+    await authClient.signOut();
+    setAuthenticated(false);
+    redirect('/');
+  };
+
+  if (loading) return null;
+
   return (
     <div
       className={cn(
@@ -28,7 +53,7 @@ export const Navbar = () => {
       <div className="md:ml-auto md:justify-end justify-between w-full flex items-center gap-x-2">
         {/** add spinner */}
 
-        {!isAuthenticated && (
+        {!authenticated && (
           <>
             <Button
               variant="ghost"
@@ -43,13 +68,13 @@ export const Navbar = () => {
             </Button>
           </>
         )}
-        {isAuthenticated && (
+        {authenticated && (
           <>
             <Button variant="ghost" size="sm" asChild>
               <Link href="/documents">Enter Botion</Link>
             </Button>
-            <Button size="sm">
-              <Link href="/api/auth/logout">Sign out</Link>
+            <Button size="sm" onClick={handleSignOut}>
+              Sign out
             </Button>
           </>
         )}
