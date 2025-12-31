@@ -3,9 +3,6 @@
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/components/providers/auth-provider';
-
-import { user } from '@/services/user.service';
 
 export const Heading = () => {
   const { isAuthenticated } = useAuth();

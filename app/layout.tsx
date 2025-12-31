@@ -4,8 +4,8 @@ import { ThemeProvider } from '@/components/providers/theme-provider';
 import { EdgeStoreProvider } from '@/lib/edgestore';
 import { Toaster } from 'sonner';
 import { ModalProvider } from '@/components/providers/modal-provider';
-import { AuthProvider } from '@/components/providers/auth-provider';
 import React from 'react';
+import { ConvexClientProvider } from '@/components/providers/ConvexClientProvider';
 
 export const metadata: Metadata = {
   title: 'Botion',
@@ -34,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning>
-        <AuthProvider>
+        <ConvexClientProvider>
           <EdgeStoreProvider>
             <ThemeProvider
               attribute="class"
@@ -47,7 +47,7 @@ export default function RootLayout({
               {children}
             </ThemeProvider>
           </EdgeStoreProvider>
-        </AuthProvider>
+        </ConvexClientProvider>
       </body>
     </html>
   );
