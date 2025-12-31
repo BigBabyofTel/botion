@@ -5,13 +5,18 @@
 ## V3 is in development
 
 ### updates
+
     - convex will be used for the backend
     - betterauth will be used for the authentication
     - make sure project is dockerized
 
-
 ### links
+
     - https://convex-better-auth.netlify.app/framework-guides/next
 
 ### To-do
+
     switch out old auth stuff for convex and better auth
+    continue to switch out old stuff for new stuff
+
+    Add the email auth stuff 
