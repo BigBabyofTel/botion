@@ -14,9 +14,13 @@ const Heading = () => {
   useEffect(() => {
     async function checkAuth() {
       try {
-        const session = await authClient.getSession();
-        setIsAuthenticated(!!session.data?.user);
+        const result = await authClient.getSession();
+        console.log('Session response:', result);
+        // The result should have data.user if authenticated
+        const hasUser = result?.data?.user;
+        setIsAuthenticated(!!hasUser);
       } catch (error) {
+        console.error('Auth check error:', error);
         setIsAuthenticated(false);
       } finally {
         setLoading(false);
@@ -26,11 +30,11 @@ const Heading = () => {
     checkAuth();
   }, []);
 
-  async function enterBotion() {
+  function enterBotion() {
     if (isAuthenticated) {
-      return router.push('/documents');
+      router.push('/documents');
     } else {
-      return router.push('/auth/signup');
+      router.push('/auth/signup');
     }
   }
 

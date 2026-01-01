@@ -2,13 +2,9 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { z } from 'zod';
 import { redirect } from 'next/navigation';
 import React, { useState } from 'react';
 import { Logo } from './logo';
-import { SignupFormSchema } from '@/app/api/db/schema';
-import { useMutation } from 'convex/react';
-import { api } from '@/convex/_generated/api';
 import { authClient } from '@/lib/auth-client';
 
 interface FormState {
@@ -31,7 +27,7 @@ export function SignupForm() {
       confirmPassword: formData.get('confirm-password') as string,
     };
     try {
-      const { data, error } = await authClient.signUp.email({
+      const { error } = await authClient.signUp.email({
         email: formState.email,
         password: formState.password,
         name: formState.username,
@@ -39,17 +35,14 @@ export function SignupForm() {
 
       if (error) {
         setErrors([error.message || 'Failed to sign up.']);
-      } else {
-        await createUser({});
+        return;
       }
 
       setErrors([]);
-    } catch (err) {
-      if (err instanceof z.ZodError) {
-        setErrors(err.errors.map((error) => error.message));
-      }
+      redirect('/auth/login');
+    } catch (error) {
+      setErrors(['An unexpected error occurred. Please try again.']);
     }
-    redirect('/auth/login');
   }
 
   return (

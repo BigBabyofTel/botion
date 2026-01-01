@@ -30,7 +30,6 @@
     "@types/bcrypt": "^5.0.2",
     "@types/bun": "^1.1.14",
     "axios": "^1.7.9",
-    "bcrypt": "^5.1.1",
     "better-auth": "1.4.7",
     "bun": "^1.1.42",
     "class-variance-authority": "^0.7.1",
