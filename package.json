@@ -17,8 +17,8 @@
     "@blocknote/mantine": "^0.22.0",
     "@blocknote/react": "^0.22.0",
     "@convex-dev/better-auth": "^0.10.4",
-    "@edgestore/react": "^0.2.2",
-    "@edgestore/server": "^0.2.2",
+    "@edgestore/react": "^0.5.6",
+    "@edgestore/server": "^0.5.6",
     "@hono/zod-validator": "^0.4.2",
     "@radix-ui/react-alert-dialog": "^1.1.4",
     "@radix-ui/react-avatar": "^1.1.2",
@@ -55,7 +55,7 @@
     "tailwindcss-animate": "^1.0.7",
     "usehooks-ts": "^3.1.0",
     "uuid": "^11.0.4",
-    "zod": "^3.24.1",
+    "zod": "^4.3.4",
     "zustand": "^5.0.2"
   },
   "devDependencies": {

@@ -16,7 +16,6 @@ interface NavbarProps {
 
 export const Navbar = ({ isCollapsed, onResetWidth }: NavbarProps) => {
   const params = useParams();
-  const { isAuthenticated } = useAuth();
 
   //function to set the params and access this page
 

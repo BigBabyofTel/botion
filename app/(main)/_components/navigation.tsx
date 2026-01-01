@@ -28,11 +28,9 @@ import DocumentList from './document-list';
 import TrashBox from './trash-box';
 import Navbar from './navbar';
 import { create } from '@/app/actions';
-import { useAuth } from '@/components/providers/auth-provider';
 
 export default function Navigation() {
   const router = useRouter();
-  const { AccessToken, userId } = useAuth();
   const settings = useSettings();
   const search = useSearch();
   const params = useParams();

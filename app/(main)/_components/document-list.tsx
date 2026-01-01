@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import Item from './item';
 import { cn } from '@/lib/utils';
 import { FileIcon } from 'lucide-react';
-import { useAuth } from '@/components/providers/auth-provider';
+
 import { documentSchema } from '@/app/api/db/schema';
 import { getSidebar, SidebarTypes } from '@/app/actions';
 import { z } from 'zod';
@@ -22,30 +22,10 @@ export default function DocumentList({
 }: DocumentListProps) {
   const params = useParams();
   const router = useRouter();
-  const { isAuthenticated, userId } = useAuth();
 
+  const isAuthenticated = true;
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [docs, setDocs] = useState<z.infer<typeof documentSchema>[]>([]);
-
-  useEffect(() => {
-    async function fetchDocs() {
-      const sidebarDocs = await getSidebar({ userId } as SidebarTypes);
-      const formattedDocs = sidebarDocs.map((doc) => ({
-        title: doc.title ?? '',
-        userId: doc.userId ?? '',
-        documentId: doc.documentId ?? '',
-        isArchived: doc.isArchived ?? false,
-        isPublished: doc.isPublished ?? false,
-        content: doc.content ?? '',
-        icon: doc.icon ?? '',
-        coverImage: doc.coverImage ?? '',
-        parentDocument: doc.parentDocument ?? '',
-      }));
-      setDocs(formattedDocs);
-    }
-
-    void fetchDocs();
-  }, [userId]);
 
   const onExpand = (documentId: string) => {
     setExpanded((prevExpanded) => ({

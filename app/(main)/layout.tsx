@@ -1,11 +1,10 @@
 'use client';
 
 import { Spinner } from '@/components/spinner';
-import { useAuth } from '@/components/providers/auth-provider';
+import { authClient } from '@/lib/auth-client';
 
 import Navigation from './_components/navigation';
-import React from 'react';
-import { user } from '@/services/user.service';
+import React, { useEffect, useState } from 'react';
 //import { SearchCommand } from "@/components/search-command";
 
 export default function MainLayout({
@@ -13,12 +12,34 @@ export default function MainLayout({
 }: {
   children: React.ReactNode;
 }) {
-  {
-    /** add user info */
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const session = await authClient.getSession();
+        setIsAuthenticated(!!session?.data?.user);
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        setIsAuthenticated(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    void checkAuth();
+  }, []);
+
+  console.log(isAuthenticated, isLoading);
+
+  if (isLoading) {
+    return (
+      <div className="h-dvh flex items-center justify-center dark:bg-[#1f1f1f]">
+        <Spinner />
+      </div>
+    );
   }
-
-  const isAuthenticated = user.getIsAuthenticated;
-
   if (isAuthenticated) {
   }
   return (

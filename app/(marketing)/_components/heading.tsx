@@ -18,7 +18,9 @@ const Heading = () => {
         console.log('Session response:', result);
         // The result should have data.user if authenticated
         const hasUser = result?.data?.user;
-        setIsAuthenticated(!!hasUser);
+        if (hasUser) {
+          setIsAuthenticated(true);
+        }
       } catch (error) {
         console.error('Auth check error:', error);
         setIsAuthenticated(false);
@@ -27,7 +29,7 @@ const Heading = () => {
       }
     }
 
-    checkAuth();
+    void checkAuth();
   }, []);
 
   function enterBotion() {
@@ -37,7 +39,6 @@ const Heading = () => {
       router.push('/auth/signup');
     }
   }
-
   if (loading) return null;
 
   return (

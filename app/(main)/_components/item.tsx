@@ -21,7 +21,6 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import React from 'react';
 import { create } from '@/app/actions';
-import { useAuth } from '@/components/providers/auth-provider';
 
 interface ItemsProps {
   documentIcon?: string;
@@ -47,9 +46,6 @@ export default function Item({
   expanded,
 }: ItemsProps) {
   const router = useRouter();
-  const { AccessToken, userId } = useAuth();
-
-  const id = userId as string;
 
   const onArchive = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
@@ -92,6 +88,7 @@ export default function Item({
     });
   };
 
+  const id = true;
   const CheveronIcon = expanded ? ChevronDown : ChevronRight;
 
   return (

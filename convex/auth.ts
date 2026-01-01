@@ -26,7 +26,7 @@ export const createAuthOptions = (ctx: GenericCtx<DataModel>) => {
 // as well as helper methods for general use.
 
 export const authComponent = createClient<DataModel, typeof authSchema>(
-  (components as any).betterAuth,
+  components.betterAuth,
   {
     local: {
       schema: authSchema,

@@ -1,27 +1,58 @@
 'use client';
 
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { create } from '@/app/actions';
-import { useAuth } from '@/components/providers/auth-provider';
+import { authClient } from '@/lib/auth-client';
+import { Spinner } from '@/components/spinner';
 
 export default function DocumentsPage() {
   const router = useRouter();
-  const { user, AccessToken, setUserId } = useAuth();
+  const [user, setUser] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [accessToken, setAccessToken] = useState<string>('');
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const session = await authClient.getSession();
+        // Handle different possible session response structures
+        const userData = session?.data?.user || session?.user;
+
+        if (!userData) {
+          router.push('/auth/login');
+          return;
+        }
+
+        setUser(userData);
+
+        // Get access token if needed
+        const token = session?.data?.session?.token || '';
+        setAccessToken(token);
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        router.push('/auth/login');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [router]);
 
   const onCreate = () => {
-    const promise = create({ title: 'Untitled', AccessToken }).then(
-      (document) => {
-        const documentId = document?.doc.documentId as string;
-        const iD = document?.doc.userId as string;
-        setUserId(iD);
-        router.push(`/documents/${documentId}`);
-      }
-    );
+    const promise = create({
+      title: 'Untitled',
+      AccessToken: accessToken,
+    }).then((document) => {
+      const documentId = document?.doc.documentId as string;
+      router.push(`/documents/${documentId}`);
+    });
 
     toast.promise(promise, {
       loading: 'Creating a new note...',
@@ -29,6 +60,18 @@ export default function DocumentsPage() {
       error: 'Failed to create a new note.',
     });
   };
+
+  if (isLoading) {
+    return (
+      <div className="h-dvh flex items-center justify-center dark:bg-[#1f1f1f]">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null; // Will redirect via useEffect
+  }
 
   return (
     <div className="h-dvh flex flex-col items-center justify-center space-y-4">
@@ -47,7 +90,7 @@ export default function DocumentsPage() {
         className="hidden dark:block"
       />
       <h2 className="text-lg font-medium">
-        Welcome to {user?.username}&apos;s Botion
+        Welcome to {user?.name}&apos;s Botion
       </h2>
       <Button onClick={onCreate}>
         <PlusCircle className="h-4 w-4 mr-2 " />

@@ -1,11 +1,14 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useMemo } from 'react';
+import { useMemo, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 import Toolbar from '@/components/toolbar';
 import { Cover } from '@/components/cover';
 import { Skeleton } from '@/components/ui/skeleton';
+import { authClient } from '@/lib/auth-client';
+import { Spinner } from '@/components/spinner';
 
 interface documentIdPageProps {
   params: {
@@ -13,19 +16,56 @@ interface documentIdPageProps {
   };
 }
 
-const DocumentIdPage = ({ params }: documentIdPageProps) => {
+const DocumentIdPage = ({ params: _params }: documentIdPageProps) => {
+  const router = useRouter();
+  const [user, setUser] = useState<Record<string, unknown> | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [document, setDocument] = useState<Record<string, unknown> | undefined>(
+    undefined
+  );
+
   const Editor = useMemo(
     () => dynamic(() => import('@/components/editor'), { ssr: false }),
     []
   );
 
-  //func to get document id
+  // Check authentication on mount
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const session = await authClient.getSession();
+        const userData = session?.data?.user;
 
-  /*
-    const onChange = (content: string) => {
-      update({ id: params.documentId, content });
+        if (!userData) {
+          router.push('/auth/login');
+          return;
+        }
+
+        setUser(userData);
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        router.push('/auth/login');
+      } finally {
+        setIsLoading(false);
+      }
     };
-  */
+
+    checkAuth();
+  }, [router]);
+
+  // ...existing code...
+  if (isLoading) {
+    return (
+      <div className="h-dvh flex items-center justify-center dark:bg-[#1f1f1f]">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
+
   if (document === undefined) {
     return (
       <div>
