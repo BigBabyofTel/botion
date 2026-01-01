@@ -1,36 +1,47 @@
 import { createClient, type GenericCtx } from '@convex-dev/better-auth';
-import { convex } from '@convex-dev/better-auth/plugins';
+import authSchema from './betterAuth/schema';
 import { components } from './_generated/api';
 import { DataModel } from './_generated/dataModel';
-import { query } from './_generated/server';
-import { betterAuth } from 'better-auth/minimal';
-import authConfig from './auth.config';
-const siteUrl = process.env.SITE_URL!;
-// The component client has methods needed for integrating Convex with Better Auth,
-// as well as helper methods for general use.
-export const authComponent = createClient<DataModel>(components.betterAuth);
-export const createAuth = (ctx: GenericCtx<DataModel>) => {
-  return betterAuth({
-    baseURL: siteUrl,
-    database: authComponent.adapter(ctx),
-    // Configure the simple, non-verified email/password to get started
-    emailAndPassword: {
-      enabled: true,
-      requireEmailVerification: false,
-    },
-    plugins: [
-      // The Convex plugin is required for Convex compatibility
-      convex({ authConfig }),
-    ],
-    // Configure the social providers you want to support. github and discord
-    socialProviders: {},
-  });
+import { betterAuth, type BetterAuthOptions } from 'better-auth/minimal';
+
+const getSiteUrl = () => {
+  const siteUrl = process.env.SITE_URL;
+  if (!siteUrl) {
+    throw new Error('SITE_URL environment variable is required');
+  }
+  return siteUrl;
 };
+
+export const createAuthOptions = async (ctx: GenericCtx<DataModel>) => {
+  const authConfig = (await import('./auth.config')).default;
+  return {
+    ...authConfig,
+    database: authComponent.adapter(ctx),
+    baseURL: getSiteUrl(),
+  } satisfies BetterAuthOptions;
+};
+
+const authComponent = createClient<DataModel, typeof authSchema>(
+  components.betterAuth,
+  {
+    local: {
+      schema: authSchema,
+    },
+  }
+);
+export default authComponent;
+
+export const createAuth = (ctx: GenericCtx<DataModel>) => {
+  return betterAuth(createAuthOptions(ctx));
+};
+
 // Example function for getting the current user
 // Feel free to edit, omit, etc.
+/*
 export const getCurrentUser = query({
   args: {},
   handler: async (ctx) => {
     return authComponent.getAuthUser(ctx);
   },
 });
+*/

@@ -7,6 +7,9 @@ import { redirect } from 'next/navigation';
 import React, { useState } from 'react';
 import { Logo } from './logo';
 import { SignupFormSchema } from '@/app/api/db/schema';
+import { useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { authClient } from '@/lib/auth-client';
 
 interface FormState {
   email: string;
@@ -27,22 +30,20 @@ export function SignupForm() {
       password: formData.get('password') as string,
       confirmPassword: formData.get('confirm-password') as string,
     };
-
     try {
-      SignupFormSchema.parse(formState);
-      setErrors([]);
-      const response = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formState),
+      const { data, error } = await authClient.signUp.email({
+        email: formState.email,
+        password: formState.password,
+        name: formState.username,
       });
-      if (response.ok) {
-        console.log('Form submitted successfully');
+
+      if (error) {
+        setErrors([error.message || 'Failed to sign up.']);
       } else {
-        setErrors(['Failed to submit form']);
+        await createUser({});
       }
+
+      setErrors([]);
     } catch (err) {
       if (err instanceof z.ZodError) {
         setErrors(err.errors.map((error) => error.message));

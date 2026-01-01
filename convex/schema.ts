@@ -14,4 +14,10 @@ export default defineSchema({
   })
     .index('by_user', ['userId'])
     .index('by_user_parent', ['userId', 'parentDocument']),
+
+  users: defineTable({
+    name: v.string(),
+    email: v.string(),
+    password: v.string(),
+  }).index('email', ['email']),
 });
