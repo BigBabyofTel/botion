@@ -2,7 +2,6 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { Logo } from './logo';
@@ -36,14 +35,24 @@ export function LoginForm() {
       if (error) {
         setErrors([error.message || 'Failed to log in.']);
       } else {
-        router.push('/');
+        router.push('/documents');
       }
-    } catch (err) {
-      if (err instanceof z.ZodError) {
-        setErrors(err.errors.map((error) => error.message));
+    } catch (err: unknown) {
+      if (err && typeof err === 'object' && 'errors' in err) {
+        setErrors(
+          (err as { errors: { message: string }[] }).errors.map(
+            (error) => error.message
+          )
+        );
       }
     }
   }
+
+  const handleGithubSignin = async () => {
+    await authClient.signIn.social({
+      provider: 'github',
+    });
+  };
 
   return (
     <>
@@ -51,7 +60,7 @@ export function LoginForm() {
         <Logo />
         <form
           onSubmit={handleForm}
-          className="w-1/3 p-5 border flex flex-col space-y-5 justify-center items-center"
+          className="w-1/3 p-5 flex flex-col space-y-5 justify-center items-center"
         >
           <Input
             type="text"
@@ -76,6 +85,7 @@ export function LoginForm() {
           )}
           <Button type="submit">Log In</Button>
         </form>
+        <Button onClick={handleGithubSignin}>Sign in with GitHub</Button>
       </div>
     </>
   );

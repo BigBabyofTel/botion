@@ -39,6 +39,8 @@ const Heading = () => {
       router.push('/auth/signup');
     }
   }
+  console.log(isAuthenticated);
+
   if (loading) return null;
 
   return (

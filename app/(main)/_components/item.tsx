@@ -20,7 +20,6 @@ import {
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import React from 'react';
-import { create } from '@/app/actions';
 
 interface ItemsProps {
   documentIcon?: string;

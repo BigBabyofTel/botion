@@ -1,4 +1,4 @@
-import { betterAuth, type BetterAuthOptions } from 'better-auth/minimal';
+import { betterAuth, type BetterAuthOptions } from 'better-auth';
 import { createClient, type GenericCtx } from '@convex-dev/better-auth';
 import { convex } from '@convex-dev/better-auth/plugins';
 import authSchema from './betterAuth/schema';
@@ -9,6 +9,13 @@ import authConfig from './auth.config';
 export const createAuthOptions = (ctx: GenericCtx<DataModel>) => {
   return {
     ...authConfig,
+    socialProviders: {
+      github: {
+        clientId: process.env.GITHUB_CLIENT!,
+        clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+        scope: ['user'],
+      },
+    },
     database: authComponent.adapter(ctx),
     emailAndPassword: {
       enabled: true,

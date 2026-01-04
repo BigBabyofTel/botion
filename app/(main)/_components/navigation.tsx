@@ -27,7 +27,6 @@ import { toast } from 'sonner';
 import DocumentList from './document-list';
 import TrashBox from './trash-box';
 import Navbar from './navbar';
-import { create } from '@/app/actions';
 
 export default function Navigation() {
   const router = useRouter();

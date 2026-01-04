@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { create } from '@/app/actions';
+
 import { authClient } from '@/lib/auth-client';
 import { Spinner } from '@/components/spinner';
 
@@ -46,7 +46,7 @@ export default function DocumentsPage() {
   }, [router]);
 
   const onCreate = () => {
-    const promise = create({
+    const promise = creat({
       title: 'Untitled',
       AccessToken: accessToken,
     }).then((document) => {
