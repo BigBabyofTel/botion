@@ -7,15 +7,8 @@ import { DataModel } from './_generated/dataModel';
 import authConfig from './auth.config';
 
 export const createAuthOptions = (ctx: GenericCtx<DataModel>) => {
-  return {
+  const options: Partial<BetterAuthOptions> = {
     ...authConfig,
-    socialProviders: {
-      github: {
-        clientId: process.env.GITHUB_CLIENT!,
-        clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-        scope: ['user'],
-      },
-    },
     database: authComponent.adapter(ctx),
     emailAndPassword: {
       enabled: true,
@@ -26,7 +19,19 @@ export const createAuthOptions = (ctx: GenericCtx<DataModel>) => {
       // The Convex plugin is required for Convex compatibility
       convex({ authConfig }),
     ],
-  } satisfies BetterAuthOptions;
+  };
+
+  if (process.env.GITHUB_CLIENT && process.env.GITHUB_CLIENT_SECRET) {
+    options.socialProviders = {
+      github: {
+        clientId: process.env.GITHUB_CLIENT as string,
+        clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+        scope: ['user'],
+      },
+    };
+  }
+
+  return options as BetterAuthOptions;
 };
 
 // The component client has methods needed for integrating Convex with Better Auth,

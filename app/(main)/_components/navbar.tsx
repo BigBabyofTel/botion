@@ -6,7 +6,6 @@ import Title from '@/app/(main)/_components/title';
 import Banner from './banner';
 import { Menu } from './menu';
 import { Publish } from './publish';
-import { useAuth } from '@/components/providers/auth-provider';
 
 //typing the props passed into the  navbar component
 interface NavbarProps {
