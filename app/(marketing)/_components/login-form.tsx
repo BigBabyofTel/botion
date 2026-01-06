@@ -8,6 +8,7 @@ import { Logo } from './logo';
 import { LoginFormSchema } from '@/app/api/db/schema';
 import { FormState } from '@/lib/types';
 import { authClient } from '@/lib/auth-client';
+import { env } from '@/lib/env';
 
 // Define the schema for login validation
 
@@ -51,7 +52,7 @@ export function LoginForm() {
   const handleGithubSignin = async () => {
     await authClient.signIn.social({
       provider: 'github',
-      callbackURL: '/documents',
+      callbackURL: `${env.SITE_URL}/documents`,
     });
   };
 
