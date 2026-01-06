@@ -1,5 +1,5 @@
 import { createEdgeStoreNextHandler } from '@edgestore/server/adapters/next/app';
-import { edgeStoreRouter } from './types';
+import { edgeStoreRouter } from './router.server';
 
 const handler = createEdgeStoreNextHandler({
   router: edgeStoreRouter,
