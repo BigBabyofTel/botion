@@ -6,7 +6,6 @@ import { cn } from '@/lib/utils';
 import { Logo } from './logo';
 import { ModeToggle } from '@/components/mode-toggle';
 import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/spinner';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';
@@ -22,7 +21,7 @@ export const Navbar = () => {
       try {
         const session = await authClient.getSession();
         setAuthenticated(!!session.data?.user);
-      } catch (error) {
+      } catch {
         setAuthenticated(false);
       } finally {
         setLoading(false);

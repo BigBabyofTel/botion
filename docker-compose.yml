@@ -1,8 +1,56 @@
-version: '3.4'
-
+name: botion
 services:
-  botion:
-    image: botion
+  # Service for the Next.js application
+  app:
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: Dockerfile
+      args:
+        EDGE_STORE_ACCESS_KEY: ${EDGE_STORE_ACCESS_KEY}
+        EDGE_STORE_SECRET_KEY: ${EDGE_STORE_SECRET_KEY}
+        GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
+        GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
+        CONVEX_DEPLOYMENT: ${CONVEX_DEPLOYMENT}
+        NEXT_PUBLIC_CONVEX_URL: ${NEXT_PUBLIC_CONVEX_URL}
+        SITE_URL: ${SITE_URL}
+    ports:
+      - "3000:3000"
+    environment:
+      # This will be provided by the convex-dev service
+      CONVEX_DEPLOYMENT: ${CONVEX_DEPLOYMENT}
+      NEXT_PUBLIC_CONVEX_URL: ${NEXT_PUBLIC_CONVEX_URL}
+      SITE_URL: ${SITE_URL}
+
+      EDGE_STORE_ACCESS_KEY: ${EDGE_STORE_ACCESS_KEY}
+      EDGE_STORE_SECRET_KEY: ${EDGE_STORE_SECRET_KEY}
+
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
+    depends_on:
+      convex-dev:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  # Service for the Convex development server
+  convex-dev:
+    image: oven/bun:1
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: sh -c "bun install && bun convex dev --host=0.0.0.0"
+    ports:
+      - "8187:8187"
+    environment:
+      CONVEX_DEPLOY_KEY: ${CONVEX_DEPLOY_KEY}
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8187" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

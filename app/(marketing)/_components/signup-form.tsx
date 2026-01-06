@@ -40,7 +40,7 @@ export function SignupForm() {
 
       setErrors([]);
       redirect('/auth/login');
-    } catch (error) {
+    } catch {
       setErrors(['An unexpected error occurred. Please try again.']);
     }
   }

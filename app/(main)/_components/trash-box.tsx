@@ -2,14 +2,16 @@
 
 import { Spinner } from '@/components/spinner';
 import { Search, Trash, Undo } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { ConfirmModal } from '@/components/modals/confirm-modal';
+import { useQuery, useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { Id } from '@/convex/_generated/dataModel';
 
 export default function TrashBox() {
   const router = useRouter();
-  const params = useParams();
   const documents = useQuery(api.documents.getTrash);
   const restore = useMutation(api.documents.restore);
   const remove = useMutation(api.documents.remove);

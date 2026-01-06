@@ -1,7 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -10,21 +8,19 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 
-import { toast } from 'sonner';
 import { MoreHorizontal, Trash } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Id } from '@/convex/_generated/dataModel';
 
 interface MenuProps {
   documentId: Id<'documents'>;
 }
 
-export const Menu = ({ documentId }: MenuProps) => {
-  const router = useRouter();
-
-  //const archive = useMutation(api.documents.archive);
-
-  //const onArchive = () => {
+export const Menu = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  documentId,
+}: MenuProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

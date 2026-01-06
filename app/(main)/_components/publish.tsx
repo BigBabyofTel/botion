@@ -10,7 +10,9 @@ import { useOrigin } from '@/hooks/use-origin';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { Check, Copy, Ghost, Globe } from 'lucide-react';
+import { Check, Copy, Globe } from 'lucide-react';
+import { useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
 
 interface PublishProps {
   initialData: Doc<'documents'>;
@@ -23,6 +25,8 @@ export const Publish = ({ initialData }: PublishProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const url = `${origin}/preview/${initialData._id}`;
+
+  const update = useMutation(api.documents.update);
 
   const onPublish = () => {
     setIsSubmitting(true);

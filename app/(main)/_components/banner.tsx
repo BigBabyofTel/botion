@@ -4,6 +4,9 @@ import { ConfirmModal } from '@/components/modals/confirm-modal';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { Id } from '@/convex/_generated/dataModel';
+import { useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
 
 interface BannerProps {
   documentId: Id<'documents'>;

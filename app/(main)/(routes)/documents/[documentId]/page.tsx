@@ -9,20 +9,21 @@ import { Cover } from '@/components/cover';
 import { Skeleton } from '@/components/ui/skeleton';
 import { authClient } from '@/lib/auth-client';
 import { Spinner } from '@/components/spinner';
+import { BetterAuthUser } from '@/lib/types';
 
 interface documentIdPageProps {
-  params: {
+  params: Promise<{
     documentId: string;
-  };
+  }>;
 }
 
-const DocumentIdPage = ({ params: _params }: documentIdPageProps) => {
+const DocumentIdPage = ({ params }: documentIdPageProps) => {
   const router = useRouter();
-  const [user, setUser] = useState<Record<string, unknown> | null>(null);
+  const [user, setUser] = useState<BetterAuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [document, setDocument] = useState<Record<string, unknown> | undefined>(
-    undefined
-  );
+  const document = undefined;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [documentId, setDocumentId] = useState<string>('');
 
   const Editor = useMemo(
     () => dynamic(() => import('@/components/editor'), { ssr: false }),
@@ -53,7 +54,14 @@ const DocumentIdPage = ({ params: _params }: documentIdPageProps) => {
     checkAuth();
   }, [router]);
 
-  // ...existing code...
+  useEffect(() => {
+    const getParams = async () => {
+      const resolvedParams = await params;
+      setDocumentId(resolvedParams.documentId);
+    };
+    getParams();
+  }, [params]);
+
   if (isLoading) {
     return (
       <div className="h-dvh flex items-center justify-center dark:bg-[#1f1f1f]">

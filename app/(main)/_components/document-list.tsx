@@ -1,13 +1,12 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Item from './item';
 import { cn } from '@/lib/utils';
 import { FileIcon } from 'lucide-react';
 
 import { documentSchema } from '@/app/api/db/schema';
-import { getSidebar, SidebarTypes } from '@/app/actions';
 import { z } from 'zod';
 
 interface DocumentListProps {
@@ -18,6 +17,7 @@ interface DocumentListProps {
 
 export default function DocumentList({
   level = 0,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   parentDocument,
 }: DocumentListProps) {
   const params = useParams();
@@ -25,7 +25,7 @@ export default function DocumentList({
 
   const isAuthenticated = true;
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
-  const [docs, setDocs] = useState<z.infer<typeof documentSchema>[]>([]);
+  const [docs] = useState<z.infer<typeof documentSchema>[]>([]);
 
   const onExpand = (documentId: string) => {
     setExpanded((prevExpanded) => ({
@@ -69,7 +69,6 @@ export default function DocumentList({
       {docs.map((document) => (
         <div key={document.documentId}>
           <Item
-            id={document.documentId}
             onClick={() => onRedirect(document.documentId)}
             label={document.title}
             icon={FileIcon}
@@ -78,6 +77,7 @@ export default function DocumentList({
             level={level}
             onExpand={() => onExpand(document.documentId)}
             expanded={expanded[document.documentId]}
+            documentId={document.documentId}
           />
           {expanded[document.documentId] && (
             <DocumentList

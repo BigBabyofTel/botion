@@ -11,7 +11,7 @@ import {
   Trash,
 } from 'lucide-react';
 import { useParams, usePathname, useRouter } from 'next/navigation';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'usehooks-ts';
 import UserItem from './user-item';
 import { useSearch } from '@/hooks/use-search';
@@ -27,6 +27,8 @@ import { toast } from 'sonner';
 import DocumentList from './document-list';
 import TrashBox from './trash-box';
 import Navbar from './navbar';
+import { useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
 
 export default function Navigation() {
   const router = useRouter();
@@ -42,13 +44,40 @@ export default function Navigation() {
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
 
+  const resetWidth = useCallback(() => {
+    if (sidebarRef.current && navbarRef.current) {
+      setIsCollapsed(false);
+      setIsResetting(true);
+
+      sidebarRef.current.style.width = isMobile ? '100%' : '240px';
+      navbarRef.current.style.setProperty(
+        'width',
+        isMobile ? '0' : 'calc(100% - 240px)'
+      );
+      navbarRef.current.style.setProperty('left', isMobile ? '100%' : '240px');
+      setTimeout(() => setIsResetting(false), 300);
+    }
+  }, [isMobile]);
+
+  const collapse = () => {
+    if (sidebarRef.current && navbarRef.current) {
+      setIsCollapsed(true);
+      setIsResetting(true);
+
+      sidebarRef.current.style.width = '0';
+      navbarRef.current.style.setProperty('width', '100%');
+      navbarRef.current.style.setProperty('left', '0');
+      setTimeout(() => setIsResetting(false), 300);
+    }
+  };
+
   useEffect(() => {
     if (isMobile) {
       collapse();
     } else {
       resetWidth();
     }
-  }, [isMobile]);
+  }, [isMobile, resetWidth]);
 
   const handleMouseDown = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -90,40 +119,13 @@ export default function Navigation() {
     }
   }, [pathname, isMobile]);
 
-  const resetWidth = () => {
-    if (sidebarRef.current && navbarRef.current) {
-      setIsCollapsed(false);
-      setIsResetting(true);
-
-      sidebarRef.current.style.width = isMobile ? '100%' : '240px';
-      navbarRef.current.style.setProperty(
-        'width',
-        isMobile ? '0' : 'calc(100% - 240px)'
-      );
-      navbarRef.current.style.setProperty('left', isMobile ? '100%' : '240px');
-      setTimeout(() => setIsResetting(false), 300);
-    }
-  };
-
-  const collapse = () => {
-    if (sidebarRef.current && navbarRef.current) {
-      setIsCollapsed(true);
-      setIsResetting(true);
-
-      sidebarRef.current.style.width = '0';
-      navbarRef.current.style.setProperty('width', '100%');
-      navbarRef.current.style.setProperty('left', '0');
-      setTimeout(() => setIsResetting(false), 300);
-    }
-  };
+  const create = useMutation(api.documents.create);
 
   //replace function to set up new pathname
   const handleCreate = () => {
-    const promise = create({ title: 'Untitled', AccessToken }).then(
-      (documentId) => {
-        router.push(`/documents/${documentId}`);
-      }
-    );
+    const promise = create({ title: 'Untitled' }).then((documentId) => {
+      router.push(`/documents/${documentId}`);
+    });
 
     toast.promise(promise, {
       loading: 'Creating a new note...',
@@ -188,7 +190,11 @@ export default function Navigation() {
         )}
       >
         {!!params.documentId ? (
-          <Navbar isCollapsed={isCollapsed} onResetWidth={resetWidth} />
+          <Navbar
+            isCollapsed={isCollapsed}
+            onResetWidth={resetWidth}
+            documentId={params.documentId as string}
+          />
         ) : (
           <nav className="bg-transparent px-3 py-2 w-full">
             {isCollapsed && (

@@ -8,6 +8,9 @@ import React, { useRef, useState } from 'react';
 
 import TextareaAutosize from 'react-textarea-autosize';
 import { useCoverImage } from '@/hooks/use-cover-image';
+import { Doc } from '@/convex/_generated/dataModel';
+import { useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
 
 interface ToolbarProps {
   initialData: Doc<'documents'>;
@@ -20,6 +23,8 @@ const Toolbar = ({ initialData, preview }: ToolbarProps) => {
   const [value, setValue] = useState(initialData.title);
 
   const coverImage = useCoverImage();
+  const update = useMutation(api.documents.update);
+  const removeIcon = useMutation(api.documents.removeIcon);
 
   const enableInput = () => {
     if (preview) return;

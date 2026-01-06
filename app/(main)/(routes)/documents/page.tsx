@@ -5,24 +5,23 @@ import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
-import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
 import { authClient } from '@/lib/auth-client';
 import { Spinner } from '@/components/spinner';
+import { BetterAuthUser } from '@/lib/types';
 
 export default function DocumentsPage() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<BetterAuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [accessToken, setAccessToken] = useState<string>('');
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
         const session = await authClient.getSession();
         // Handle different possible session response structures
-        const userData = session?.data?.user || session?.user;
+        const userData = session?.data?.user;
 
         if (!userData) {
           router.push('/auth/login');
@@ -30,10 +29,6 @@ export default function DocumentsPage() {
         }
 
         setUser(userData);
-
-        // Get access token if needed
-        const token = session?.data?.session?.token || '';
-        setAccessToken(token);
       } catch (error) {
         console.error('Auth check failed:', error);
         router.push('/auth/login');
@@ -42,23 +37,22 @@ export default function DocumentsPage() {
       }
     };
 
-    checkAuth();
+    void checkAuth();
   }, [router]);
 
   const onCreate = () => {
-    const promise = creat({
-      title: 'Untitled',
-      AccessToken: accessToken,
-    }).then((document) => {
-      const documentId = document?.doc.documentId as string;
-      router.push(`/documents/${documentId}`);
-    });
-
-    toast.promise(promise, {
-      loading: 'Creating a new note...',
-      success: 'New note created!',
-      error: 'Failed to create a new note.',
-    });
+    // const promise = creat({
+    //   title: 'Untitled',
+    //   AccessToken: accessToken,
+    // }).then((document) => {
+    //   const documentId = document?.doc.documentId as string;
+    //   router.push(`/documents/${documentId}`);
+    // });
+    // toast.promise(promise, {
+    //   loading: 'Creating a new note...',
+    //   success: 'New note created!',
+    //   error: 'Failed to create a new note.',
+    // });
   };
 
   if (isLoading) {

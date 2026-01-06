@@ -1,5 +1,3 @@
-import React from 'react';
-
 export interface AuthContextType {
   AccessToken: string | null;
   RefreshToken: string | null;
@@ -67,4 +65,15 @@ export interface SessionStore {
   user: UserObject | null;
   setUser: (user: UserObject) => void;
   deleteUser: () => void;
+}
+
+export interface BetterAuthUser {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  email: string;
+  emailVerified: boolean;
+  name: string;
+  image?: string | null;
+  userId?: string | null;
 }

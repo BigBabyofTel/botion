@@ -8,6 +8,9 @@ import { useCoverImage } from '@/hooks/use-cover-image';
 import { useParams } from 'next/navigation';
 import { useEdgeStore } from '@/lib/edgestore';
 import { Skeleton } from './ui/skeleton';
+import { useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { Id } from '@/convex/_generated/dataModel';
 
 interface CoverImageProps {
   url?: string;
@@ -18,6 +21,8 @@ export const Cover = ({ url, preview }: CoverImageProps) => {
   const { edgestore } = useEdgeStore();
   const coverImage = useCoverImage();
   const params = useParams();
+
+  const removeCoverImage = useMutation(api.documents.removeCoverImage);
 
   const onRemove = async () => {
     if (url) {

@@ -20,6 +20,9 @@ import {
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import React from 'react';
+import { useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { Id } from '@/convex/_generated/dataModel';
 
 interface ItemsProps {
   documentIcon?: string;
@@ -31,6 +34,7 @@ interface ItemsProps {
   label: string;
   onClick?: () => void;
   icon: LucideIcon;
+  documentId?: string;
 }
 
 export default function Item({
@@ -43,13 +47,16 @@ export default function Item({
   level = 0,
   onExpand,
   expanded,
+  documentId,
 }: ItemsProps) {
   const router = useRouter();
+  const archive = useMutation(api.documents.archive);
+  const create = useMutation(api.documents.create);
 
   const onArchive = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
-    if (!userId) return;
-    const promise = archive({ userId }).then(() => {
+    if (!documentId) return;
+    const promise = archive({ id: documentId as Id<'documents'> }).then(() => {
       router.push('/documents');
     });
     toast.promise(promise, {
@@ -68,11 +75,9 @@ export default function Item({
 
   const onCreate = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
-    if (!id) return;
     const promise = create({
       title: 'Untitled',
-      AccessToken,
-      parentDocument: id,
+      parentDocument: documentId as Id<'documents'> | undefined,
     }).then((documentId) => {
       if (!expanded) {
         onExpand?.();
@@ -87,7 +92,7 @@ export default function Item({
     });
   };
 
-  const id = true;
+  const id = documentId;
   const CheveronIcon = expanded ? ChevronDown : ChevronRight;
 
   return (

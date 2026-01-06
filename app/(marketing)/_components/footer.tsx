@@ -1,7 +1,6 @@
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 
-import { Logo } from "./logo";
-import { Ghost } from "lucide-react";
+import { Logo } from './logo';
 
 export const Footer = () => {
   return (

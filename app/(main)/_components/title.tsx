@@ -3,6 +3,9 @@
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useRef, useState } from 'react';
+import { Doc } from '@/convex/_generated/dataModel';
+import { useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
 
 interface TitleProps {
   initialData: Doc<'documents'>;
@@ -13,6 +16,8 @@ const Title = ({ initialData }: TitleProps) => {
 
   const [title, setTitle] = useState(initialData?.title || 'untitled');
   const [isEditing, setIsEditing] = useState(false);
+
+  const update = useMutation(api.documents.update);
 
   const enableInput = () => {
     setTitle(initialData.title);

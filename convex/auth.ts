@@ -15,6 +15,7 @@ export const createAuthOptions = (ctx: GenericCtx<DataModel>) => {
       requireEmailVerification: false,
     },
     baseURL: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+    trustedOrigins: ['http://localhost:3000', 'http://localhost:3001'],
     plugins: [
       // The Convex plugin is required for Convex compatibility
       convex({ authConfig }),

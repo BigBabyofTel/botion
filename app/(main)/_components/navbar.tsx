@@ -1,21 +1,24 @@
 'use client';
 
 import { MenuIcon } from 'lucide-react';
-import { useParams } from 'next/navigation';
 import Title from '@/app/(main)/_components/title';
 import Banner from './banner';
 import { Menu } from './menu';
 import { Publish } from './publish';
+import { Id } from '@/convex/_generated/dataModel';
 
 //typing the props passed into the  navbar component
 interface NavbarProps {
   isCollapsed: boolean;
   onResetWidth: () => void;
+  documentId?: string;
 }
 
-export const Navbar = ({ isCollapsed, onResetWidth }: NavbarProps) => {
-  const params = useParams();
-
+export const Navbar = ({
+  isCollapsed,
+  onResetWidth,
+  documentId,
+}: NavbarProps) => {
   //function to set the params and access this page
 
   return (
@@ -29,14 +32,16 @@ export const Navbar = ({ isCollapsed, onResetWidth }: NavbarProps) => {
           />
         )}
         <div className="flex items-center justify-between w-full">
-          <Title initialData={document} />
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+          <Title initialData={null as any} />
           <div className="flex items-center gap-x-2">
-            <Publish initialData={document} />
-            <Menu documentId={document._id} />
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+            <Publish initialData={null as any} />
+            <Menu documentId={documentId as Id<'documents'>} />
           </div>
         </div>
       </nav>
-      {document.isArchived && <Banner documentId={document._id} />}
+      {documentId && <Banner documentId={documentId as Id<'documents'>} />}
     </>
   );
 };
