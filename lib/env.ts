@@ -1,55 +1,37 @@
+import { createEnv } from '@t3-oss/env-nextjs';
 import { z } from 'zod';
 
-const envSchema = z.object({
-  CONVEX_DEPLOYMENT: z.string().optional(),
-  NEXT_PUBLIC_CONVEX_URL: z.string().optional(),
-  CONVEX_SITE_URL: z.string().optional(),
-  NEXT_PUBLIC_CONVEX_SITE_URL: z.string().optional(),
-  NEXT_PUBLIC_SITE_URL: z.string().optional(),
-  SITE_URL: z.string().optional(),
-  EDGE_STORE_ACCESS_KEY: z.string().optional(),
-  EDGE_STORE_SECRET_KEY: z.string().optional(),
-  GITHUB_CLIENT_SECRET: z.string().optional(),
-  GITHUB_CLIENT_ID: z.string().optional(),
-  CONVEX_DEPLOY_KEY: z.string().optional(),
-  DATABASE_URL: z.string().optional(),
-  ALLOWED_ORIGINS: z.string().optional(),
-});
-
-// Parse and validate environment variables
-const parsed = envSchema.safeParse(process.env);
-
-if (!parsed.success) {
-  console.error('❌ Invalid environment variables:', parsed.error.format());
-  throw new Error('Invalid environment variables');
-}
-
-// Create a proxy that provides defaults for missing values during build
-export const env = new Proxy(parsed.data, {
-  get(target, prop) {
-    const value = target[prop as keyof typeof target];
-
-    // Return the value if it exists
-    if (value !== undefined && value !== null && value !== '') {
-      return value;
-    }
-
-    // Provide defaults for URL variables during build time
-    if (typeof prop === 'string') {
-      if (prop === 'SITE_URL' || prop === 'NEXT_PUBLIC_SITE_URL') {
-        return 'http://localhost:3000';
-      }
-      if (
-        prop === 'CONVEX_SITE_URL' ||
-        prop === 'NEXT_PUBLIC_CONVEX_SITE_URL'
-      ) {
-        return 'http://localhost:3000';
-      }
-      if (prop === 'NEXT_PUBLIC_CONVEX_URL') {
-        return 'http://localhost:3000';
-      }
-    }
-
-    return value;
+export const env = createEnv({
+  server: {
+    DATABASE_URL: z.string().optional(),
+    CONVEX_DEPLOYMENT: z.string().optional(),
+    CONVEX_SITE_URL: z.string().optional(),
+    SITE_URL: z.string().optional(),
+    EDGE_STORE_ACCESS_KEY: z.string().optional(),
+    EDGE_STORE_SECRET_KEY: z.string().optional(),
+    GITHUB_CLIENT_SECRET: z.string().optional(),
+    GITHUB_CLIENT_ID: z.string().optional(),
+    CONVEX_DEPLOY_KEY: z.string().optional(),
   },
-}) as Required<z.infer<typeof envSchema>>;
+  client: {
+    NEXT_PUBLIC_CONVEX_URL: z.string().optional(),
+    NEXT_PUBLIC_CONVEX_SITE_URL: z.string().optional(),
+    NEXT_PUBLIC_SITE_URL: z.string().optional(),
+  },
+  runtimeEnv: {
+    // Server
+    DATABASE_URL: process.env.DATABASE_URL,
+    CONVEX_DEPLOYMENT: process.env.CONVEX_DEPLOYMENT,
+    CONVEX_SITE_URL: process.env.CONVEX_SITE_URL,
+    SITE_URL: process.env.SITE_URL,
+    EDGE_STORE_ACCESS_KEY: process.env.EDGE_STORE_ACCESS_KEY,
+    EDGE_STORE_SECRET_KEY: process.env.EDGE_STORE_SECRET_KEY,
+    GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
+    GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
+    CONVEX_DEPLOY_KEY: process.env.CONVEX_DEPLOY_KEY,
+    // Client
+    NEXT_PUBLIC_CONVEX_URL: process.env.NEXT_PUBLIC_CONVEX_URL,
+    NEXT_PUBLIC_CONVEX_SITE_URL: process.env.NEXT_PUBLIC_CONVEX_SITE_URL,
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+  },
+});
