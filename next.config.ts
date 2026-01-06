@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   output: 'standalone',
   async headers() {
     const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [
-      'http://localhost:3001',
+      'http://localhost:3000',
     ];
     return [
       {
