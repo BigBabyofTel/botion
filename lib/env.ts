@@ -6,7 +6,7 @@ const envSchema = z.object({
   CONVEX_SITE_URL: z.string(),
   NEXT_PUBLIC_CONVEX_SITE_URL: z.string(),
   NEXT_PUBLIC_SITE_URL: z.string(),
-  SITE_URL: z.string(),
+  SITE_URL: z.string().default('http://localhost:3000'),
   EDGE_STORE_ACCESS_KEY: z.string().min(1),
   EDGE_STORE_SECRET_KEY: z.string().min(1),
   GITHUB_CLIENT_SECRET: z.string().min(1),
