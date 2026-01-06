@@ -1,6 +1,8 @@
-import { type edgeStoreRouter } from './router.server';
-
 /**
- * This type is used to create the type-safe client for the frontend.
+ * Pure type re-exports for client-side usage.
+ * This file only re-exports types from route.ts (which is a server file).
+ * This prevents importing router.server.ts directly, which could cause
+ * @edgestore/server module to be bundled into client code.
  */
-export type EdgeStoreRouter = typeof edgeStoreRouter;
+
+export type { EdgeStoreRouter } from './route';

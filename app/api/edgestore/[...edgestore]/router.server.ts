@@ -1,12 +1,23 @@
 import { initEdgeStore } from '@edgestore/server';
 
-const es = initEdgeStore.create();
+// Lazy initialization - only create router when first accessed
+let edgeStoreRouter: ReturnType<
+  ReturnType<typeof initEdgeStore.create>['router']
+> | null = null;
 
-/**
- * This is the main router for the Edge Store buckets.
- */
-export const edgeStoreRouter = es.router({
-  publicFiles: es.fileBucket().beforeDelete(() => {
-    return true;
-  }),
-});
+function createRouter() {
+  const es = initEdgeStore.create();
+
+  return es.router({
+    publicFiles: es.fileBucket().beforeDelete(() => {
+      return true;
+    }),
+  });
+}
+
+export function getEdgeStoreRouter() {
+  if (!edgeStoreRouter) {
+    edgeStoreRouter = createRouter();
+  }
+  return edgeStoreRouter;
+}

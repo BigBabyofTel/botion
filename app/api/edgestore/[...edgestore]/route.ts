@@ -1,8 +1,21 @@
 import { createEdgeStoreNextHandler } from '@edgestore/server/adapters/next/app';
-import { edgeStoreRouter } from './router.server';
+import { NextRequest } from 'next/server';
+import { getEdgeStoreRouter } from './router.server';
 
-const handler = createEdgeStoreNextHandler({
-  router: edgeStoreRouter,
-});
+// Lazy initialization - only create handler when first accessed at runtime
+let cachedHandler: ReturnType<typeof createEdgeStoreNextHandler> | null = null;
 
-export { handler as GET, handler as POST };
+function getHandler() {
+  if (!cachedHandler) {
+    cachedHandler = createEdgeStoreNextHandler({
+      router: getEdgeStoreRouter(),
+    });
+  }
+  return cachedHandler;
+}
+
+// Export handlers that lazily initialize on first request
+export const GET = (request: NextRequest) => getHandler()(request);
+export const POST = (request: NextRequest) => getHandler()(request);
+
+export type EdgeStoreRouter = ReturnType<typeof getEdgeStoreRouter>;
