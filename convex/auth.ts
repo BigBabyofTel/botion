@@ -15,17 +15,20 @@ export const createAuthOptions = (ctx: GenericCtx<DataModel>) => {
       requireEmailVerification: false,
     },
     baseURL: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
-    trustedOrigins: ['http://localhost:3000'],
+    trustedOrigins: [
+      process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+      'http://localhost:3000',
+    ],
     plugins: [
       // The Convex plugin is required for Convex compatibility
       convex({ authConfig }),
     ],
   };
 
-  if (process.env.GITHUB_CLIENT && process.env.GITHUB_CLIENT_SECRET) {
+  if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
     options.socialProviders = {
       github: {
-        clientId: process.env.GITHUB_CLIENT as string,
+        clientId: process.env.GITHUB_CLIENT_ID as string,
         clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
         scope: ['user'],
       },

@@ -2,7 +2,6 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { Logo } from './logo';
 import { LoginFormSchema } from '@/app/api/db/schema';
@@ -14,7 +13,6 @@ import { env } from '@/lib/env';
 
 export function LoginForm() {
   const [errors, setErrors] = useState<string[]>([]);
-  const router = useRouter();
 
   async function handleForm(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -36,7 +34,13 @@ export function LoginForm() {
       if (error) {
         setErrors([error.message || 'Failed to log in.']);
       } else {
-        router.push('/documents');
+        // Use absolute URL for redirect
+        const siteUrl =
+          env.NEXT_PUBLIC_SITE_URL ||
+          (typeof window !== 'undefined'
+            ? window.location.origin
+            : 'http://localhost:3000');
+        window.location.href = `${siteUrl}/documents`;
       }
     } catch (err: unknown) {
       if (err && typeof err === 'object' && 'errors' in err) {
@@ -50,9 +54,16 @@ export function LoginForm() {
   }
 
   const handleGithubSignin = async () => {
+    // Use NEXT_PUBLIC_SITE_URL for client-side access with absolute URL
+    const siteUrl =
+      env.NEXT_PUBLIC_SITE_URL ||
+      (typeof window !== 'undefined'
+        ? window.location.origin
+        : 'http://localhost:3000');
+
     await authClient.signIn.social({
       provider: 'github',
-      callbackURL: `${env.SITE_URL as string}/documents`,
+      callbackURL: `${siteUrl}/documents`,
     });
   };
 
