@@ -16,19 +16,7 @@ const getBaseURL = () => {
   return 'http://localhost:3000';
 };
 
-let _authClient: ReturnType<typeof createAuthClient> | null = null;
-
-export const authClient = new Proxy({} as ReturnType<typeof createAuthClient>, {
-  get(_target, prop) {
-    if (!_authClient) {
-      // Lazy initialization - only create when first accessed
-      const baseURL = getBaseURL();
-
-      _authClient = createAuthClient({
-        baseURL,
-        plugins: [convexClient()],
-      });
-    }
-    return _authClient[prop as keyof typeof _authClient];
-  },
+export const authClient = createAuthClient({
+  baseURL: getBaseURL(),
+  plugins: [convexClient()],
 });
