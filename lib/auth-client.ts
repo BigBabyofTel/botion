@@ -22,10 +22,7 @@ export const authClient = new Proxy({} as ReturnType<typeof createAuthClient>, {
   get(_target, prop) {
     if (!_authClient) {
       // Lazy initialization - only create when first accessed
-      const baseURL =
-        env.NEXT_PUBLIC_SITE_URL ||
-        (typeof window !== 'undefined' ? window.location.origin : '') ||
-        'https://localhost:3000';
+      const baseURL = getBaseURL();
 
       _authClient = createAuthClient({
         baseURL,
