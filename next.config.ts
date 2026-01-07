@@ -1,15 +1,11 @@
 import type { NextConfig } from 'next';
+import { env } from './lib/env';
 
 const nextConfig: NextConfig = {
   /* config options here */
   output: 'standalone',
-  exportPathMap: async function () {
-    return {
-      '/': { page: '/' },
-    };
-  },
   async headers() {
-    const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [
+    const allowedOrigins = env.ALLOWED_ORIGINS?.split(',') || [
       'http://localhost:3000',
     ];
     return [

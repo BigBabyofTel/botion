@@ -12,6 +12,7 @@ export const env = createEnv({
     GITHUB_CLIENT_SECRET: z.string().optional(),
     GITHUB_CLIENT_ID: z.string().optional(),
     CONVEX_DEPLOY_KEY: z.string().optional(),
+    ALLOWED_ORIGINS: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_CONVEX_URL: z.string().optional(),
@@ -29,6 +30,7 @@ export const env = createEnv({
     GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
     GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
     CONVEX_DEPLOY_KEY: process.env.CONVEX_DEPLOY_KEY,
+    ALLOWED_ORIGINS: process.env.ALLOWED_ORIGINS,
     // Client
     NEXT_PUBLIC_CONVEX_URL: process.env.NEXT_PUBLIC_CONVEX_URL,
     NEXT_PUBLIC_CONVEX_SITE_URL: process.env.NEXT_PUBLIC_CONVEX_SITE_URL,
