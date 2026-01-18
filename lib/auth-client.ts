@@ -13,7 +13,7 @@ const getBaseURL = () => {
     return window.location.origin;
   }
   // Build-time fallback
-  return 'http://localhost:3000';
+  return `${process.env.NEXT_PUBLIC_SITE_URL}`;
 };
 
 export const authClient = createAuthClient({
