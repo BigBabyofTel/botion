@@ -10,7 +10,7 @@ const getConvexURL = () => {
   if (!env.NEXT_PUBLIC_CONVEX_URL) {
     throw new Error('NEXT_PUBLIC_CONVEX_URL environment variable is required');
   }
-  return env.NEXT_PUBLIC_CONVEX_URL;
+  return env.NEXT_PUBLIC_CONVEX_URL!;
 };
 
 const convex = new ConvexReactClient(getConvexURL());

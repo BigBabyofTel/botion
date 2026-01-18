@@ -37,7 +37,7 @@ export default function DocumentsPage() {
       }
     };
 
-    void checkAuth();
+    checkAuth();
   }, [router]);
 
   const onCreate = () => {
