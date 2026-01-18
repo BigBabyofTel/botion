@@ -7,6 +7,13 @@ import { DataModel } from './_generated/dataModel';
 import authConfig from './auth.config';
 
 export const createAuthOptions = (ctx: GenericCtx<DataModel>) => {
+  // Ensure we have a valid baseURL - should never be localhost in production
+  const baseURL = process.env.NEXT_PUBLIC_SITE_URL;
+
+  if (!baseURL) {
+    throw new Error('NEXT_PUBLIC_SITE_URL environment variable is required');
+  }
+
   const options: Partial<BetterAuthOptions> = {
     ...authConfig,
     database: authComponent.adapter(ctx),
@@ -14,8 +21,8 @@ export const createAuthOptions = (ctx: GenericCtx<DataModel>) => {
       enabled: true,
       requireEmailVerification: false,
     },
-    baseURL: process.env.NEXT_PUBLIC_SITE_URL!,
-    trustedOrigins: [process.env.NEXT_PUBLIC_SITE_URL!],
+    baseURL: baseURL,
+    trustedOrigins: [baseURL],
     plugins: [
       // The Convex plugin is required for Convex compatibility
       convex({ authConfig }),

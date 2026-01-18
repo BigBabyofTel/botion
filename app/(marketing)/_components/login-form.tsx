@@ -37,9 +37,13 @@ export function LoginForm() {
         // Use absolute URL for redirect
         const siteUrl =
           env.NEXT_PUBLIC_SITE_URL ||
-          (typeof window !== 'undefined'
-            ? window.location.origin
-            : 'http://localhost:3000');
+          (typeof window !== 'undefined' ? window.location.origin : undefined);
+
+        if (!siteUrl) {
+          setErrors(['Unable to determine redirect URL']);
+          return;
+        }
+
         window.location.href = `${siteUrl}/documents`;
       }
     } catch (err: unknown) {
@@ -57,9 +61,12 @@ export function LoginForm() {
     // Use NEXT_PUBLIC_SITE_URL for client-side access with absolute URL
     const siteUrl =
       env.NEXT_PUBLIC_SITE_URL ||
-      (typeof window !== 'undefined'
-        ? window.location.origin
-        : 'http://localhost:3000');
+      (typeof window !== 'undefined' ? window.location.origin : undefined);
+
+    if (!siteUrl) {
+      setErrors(['Unable to determine site URL for GitHub signin']);
+      return;
+    }
 
     await authClient.signIn.social({
       provider: 'github',

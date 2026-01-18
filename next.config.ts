@@ -5,9 +5,11 @@ const nextConfig: NextConfig = {
   /* config options here */
   output: 'standalone',
   async headers() {
-    const allowedOrigins = env.ALLOWED_ORIGINS?.split(',') || [
+    const defaultOrigins = [
       'http://localhost:3000',
+      'https://botion-five.vercel.app',
     ];
+    const allowedOrigins = env.ALLOWED_ORIGINS?.split(',') || defaultOrigins;
     return [
       {
         source: '/api/:path*',

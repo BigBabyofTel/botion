@@ -5,13 +5,12 @@ import { authClient } from '@/lib/auth-client';
 import { ConvexBetterAuthProvider } from '@convex-dev/better-auth/react';
 import { env } from '@/lib/env';
 
-// Ensure we always have a valid URL for ConvexReactClient
+// Get Convex URL from environment
 const getConvexURL = () => {
-  if (env.NEXT_PUBLIC_CONVEX_URL) {
-    return env.NEXT_PUBLIC_CONVEX_URL;
+  if (!env.NEXT_PUBLIC_CONVEX_URL) {
+    throw new Error('NEXT_PUBLIC_CONVEX_URL environment variable is required');
   }
-  // Build-time fallback
-  return 'http://localhost:3000';
+  return env.NEXT_PUBLIC_CONVEX_URL;
 };
 
 const convex = new ConvexReactClient(getConvexURL());
