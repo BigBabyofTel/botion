@@ -7,12 +7,9 @@ import { DataModel } from './_generated/dataModel';
 import authConfig from './auth.config';
 
 export const createAuthOptions = (ctx: GenericCtx<DataModel>) => {
-  // Ensure we have a valid baseURL - should never be localhost in production
-  const baseURL = process.env.NEXT_PUBLIC_SITE_URL;
-
-  if (!baseURL) {
-    throw new Error('NEXT_PUBLIC_SITE_URL environment variable is required');
-  }
+  // Use environment variable or production domain as fallback for Convex deployment
+  const baseURL =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://botion-five.vercel.app';
 
   const options: Partial<BetterAuthOptions> = {
     ...authConfig,
@@ -69,3 +66,4 @@ export const getCurrentUser = query({
   },
 });
 */
+
