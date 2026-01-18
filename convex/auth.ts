@@ -7,9 +7,19 @@ import { DataModel } from './_generated/dataModel';
 import authConfig from './auth.config';
 
 export const createAuthOptions = (ctx: GenericCtx<DataModel>) => {
-  // Use environment variable or production domain as fallback for Convex deployment
+  // Get base URL from environment or use production domain
   const baseURL =
     process.env.NEXT_PUBLIC_SITE_URL || 'https://botion-five.vercel.app';
+
+  // Allow multiple trusted origins for Better Auth
+  // Include: main domain, deployment domain, and localhost for development
+  const trustedOrigins = [
+    baseURL,
+    'https://botion-five.vercel.app',
+    'http://localhost:3000',
+    // Also allow the deployment domain without subdomain issues
+    /\.vercel\.app$/, // Match any vercel deployment
+  ];
 
   const options: Partial<BetterAuthOptions> = {
     ...authConfig,
@@ -19,7 +29,7 @@ export const createAuthOptions = (ctx: GenericCtx<DataModel>) => {
       requireEmailVerification: false,
     },
     baseURL: baseURL,
-    trustedOrigins: [baseURL],
+    trustedOrigins: trustedOrigins as any, // Better Auth supports regex patterns
     plugins: [
       // The Convex plugin is required for Convex compatibility
       convex({ authConfig }),
