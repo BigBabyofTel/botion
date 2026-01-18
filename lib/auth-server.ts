@@ -10,6 +10,6 @@ export const {
   fetchAuthMutation,
   fetchAuthAction,
 } = convexBetterAuthNextJs({
-  convexUrl: env.NEXT_PUBLIC_CONVEX_URL || 'http://localhost:3000',
-  convexSiteUrl: env.CONVEX_SITE_URL || 'http://localhost:3000',
+  convexUrl: env.NEXT_PUBLIC_CONVEX_URL!,
+  convexSiteUrl: env.CONVEX_SITE_URL!,
 });
